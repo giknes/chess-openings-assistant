@@ -1,0 +1,85 @@
+.chess-game-container {
+  width: 400px;
+  margin: 20px auto;
+  padding: 15px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.chess-board {
+  width: 400px !important;
+  height: 400px !important;
+  margin: 0 auto;
+}
+
+.controls {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reset-button {
+  padding: 8px 16px;
+  background-color: #5d8a66;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  width: fit-content;
+}
+
+.reset-button:hover {
+  background-color: #4a6d52;
+  transform: scale(1.02);
+}
+
+.game-status {
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  border: 1px solid #e0e0e0;
+  color: #333;
+}
+
+.game-status strong {
+  color: #c62828;
+}
+
+/* КЛАССИЧЕСКИЕ ЦВЕТА ДОСКИ */
+.react-chessboard {
+  --dark-square: #b58863; /* классический тёмный */
+  --light-square: #f0d9b5; /* классический светлый */
+  --highlight: rgba(255, 255, 0, 0.4); /* жёлтая подсветка */
+}
+
+.react-chessboard .board {
+  border-radius: 4px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  border: 1px solid #ccc;
+}
+
+/* Подсветка ходов */
+.highlight {
+  background: var(--highlight) !important;
+  border-radius: 50%;
+}
+
+/* Стили для фигур - делаем более контрастными */
+piece {
+  filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.3));
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 450px) {
+  .chess-game-container,
+  .chess-board {
+    width: 350px !important;
+  }
+  
+  .chess-board {
+    height: 350px !important;
+  }
+}
