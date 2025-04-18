@@ -1,85 +1,176 @@
-.chess-game-container {
-  width: 400px;
-  margin: 20px auto;
-  padding: 15px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.chess-board {
-  width: 400px !important;
-  height: 400px !important;
+/* Основные стили */
+.chess-app-container {
+  display: flex;
+  min-height: calc(100vh - 60px);
+  padding: 20px;
+  max-width: 1400px;
   margin: 0 auto;
+  box-sizing: border-box;
+  gap: 20px;
 }
 
-.controls {
-  margin-bottom: 15px;
+/* Главная сетка */
+.main-grid {
+  display: flex;
+  width: 100%;
+  gap: 20px;
+}
+
+/* Область доски */
+.chessboard-wrapper {
+  flex: 1;
+  min-width: 400px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Правая панель */
+.right-panel {
+  width: 350px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
 }
 
-.reset-button {
-  padding: 8px 16px;
-  background-color: #5d8a66;
+/* Группа контролов */
+.controls-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 15px;
+}
+
+/* Кнопка поиска */
+.search-button {
+  padding: 12px;
+  background: #4CAF50;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
+  font-weight: bold;
   cursor: pointer;
-  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   transition: all 0.2s;
-  width: fit-content;
 }
 
-.reset-button:hover {
-  background-color: #4a6d52;
-  transform: scale(1.02);
+.search-button:hover {
+  background: #3e8e41;
 }
 
+/* Статус игры */
 .game-status {
-  font-size: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  text-align: center;
+  background: #e3f2fd;
+  color: #1976d2;
+  border-left: 4px solid #1976d2;
+}
+
+/* История ходов */
+.history-section {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 15px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.history-section h3 {
+  margin: 0 0 15px 0;
+  color: #2c3e50;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.moves-list {
+  flex: 1;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+  max-height: 300px;
+  padding: 5px;
+}
+
+.move {
   padding: 8px 12px;
-  border-radius: 4px;
-  background-color: #f8f8f8;
-  border: 1px solid #e0e0e0;
-  color: #333;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
 }
 
-.game-status strong {
-  color: #c62828;
+.move.active {
+  background: #007bff;
+  color: white;
 }
 
-/* КЛАССИЧЕСКИЕ ЦВЕТА ДОСКИ */
-.react-chessboard {
-  --dark-square: #b58863; /* классический тёмный */
-  --light-square: #f0d9b5; /* классический светлый */
-  --highlight: rgba(255, 255, 0, 0.4); /* жёлтая подсветка */
+.move-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 15px;
 }
 
-.react-chessboard .board {
-  border-radius: 4px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-  border: 1px solid #ccc;
+.move-buttons button {
+  padding: 8px 16px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
-/* Подсветка ходов */
-.highlight {
-  background: var(--highlight) !important;
-  border-radius: 50%;
+.move-buttons button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-/* Стили для фигур - делаем более контрастными */
-piece {
-  filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.3));
+/* Модальное окно */
+.search-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 60px;
+  background: rgba(0,0,0,0.8);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Адаптация для мобильных */
-@media (max-width: 450px) {
-  .chess-game-container,
-  .chess-board {
-    width: 350px !important;
+.search-modal-content {
+  background: white;
+  width: 95%;
+  max-width: 800px;
+  max-height: 90vh;
+  padding: 30px;
+  border-radius: 12px;
+}
+
+/* Адаптация */
+@media (max-width: 992px) {
+  .main-grid {
+    flex-direction: column;
   }
   
-  .chess-board {
-    height: 350px !important;
+  .chessboard-wrapper,
+  .right-panel {
+    width: 100%;
+  }
+  
+  .moves-list {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   }
 }
