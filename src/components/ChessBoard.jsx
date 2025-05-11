@@ -8,6 +8,13 @@ import MoveHistory from "./MoveHistory";
 import SearchIcon from "./SearchIcon";
 import './ChessBoard.css';
 
+import { 
+  Button,
+  Card,
+  TextBox,
+  Cell,
+} from '@salutejs/plasma-ui';
+
 export default function ChessBoardComponent({ pgn = "", initialMode = "learn" }) {
   const [mode, setMode] = useState(initialMode);
   const [game, setGame] = useState(new Chess());
@@ -200,6 +207,9 @@ export default function ChessBoardComponent({ pgn = "", initialMode = "learn" })
             onSquareClick={onSquareClick}
             squareClassName={getSquareClassName}
             boardWidth={Math.min(600, window.innerWidth - 350)}
+            customBoardStyle={{
+              margin: '0 auto' /* Центрируем доску в своей области */
+            }}
             customDarkSquareStyle={{ backgroundColor: "#b58863" }}
             customLightSquareStyle={{ backgroundColor: "#f0d9b5" }}
           />
@@ -207,42 +217,57 @@ export default function ChessBoardComponent({ pgn = "", initialMode = "learn" })
 
         {/* Правая панель (контролы + история) */}
         <div className="right-panel">
-          {/* Кнопка поиска и статус */}
-          <div className="controls-group">
-            <button 
-              className="search-button"
-              onClick={() => setIsSearchOpen(true)}
-            >
-              <SearchIcon /> Поиск дебюта
-            </button>
-            <GameStatus game={game} errorMessage={errorMessage} />
-            {/* Кнопка ориентации доски */}
-            <button
-              className="orientation-button"
-              onClick={() => setIsFlipped(!isFlipped)}
-            >
-              Смена ориентации доски
-            </button>
-          </div>
+  <Card style={{ 
+    padding: '1.5rem',
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    overflow: 'hidden'
+  }}>
+    <div className="card-content">
+      {/* Первая строка: Поиск и ориентация */}
+      <div style={{ display: 'flex', gap: '1rem' }}>
+        <Button 
+          view="primary" 
+          size="s" 
+          onClick={() => setIsSearchOpen(true)}
+          style={{ flex: 1 }}
+        >
+          Поиск дебюта
+        </Button>
+        <Button 
+          view="secondary" 
+          size="s" 
+          onClick={() => setIsFlipped(!isFlipped)}
+          style={{ flex: 1 }}
+        >
+          Смена ориентации
+        </Button>
+      </div>
 
-          {/* Контролы режимов */}
-          <GameControls
-            mode={mode}
-            setMode={setMode}
-            resetGame={resetGame}
-            hasPgn={!!pgn}
-            isGameLoaded={isGameLoaded}
-          />
+      {/* Статус игры */}
+      <GameStatus game={game} errorMessage={errorMessage} />
 
-          {/* История ходов */}
-          {mode !== "practice" && moveHistory.length > 0 && (
-            <MoveHistory
-            moveHistory={moveHistory}
-            currentMoveIndex={currentMoveIndex}
-            goToMove={goToMove}
-          />
-          )}
-        </div>
+      {/* Кнопки режимов */}
+      <GameControls
+        mode={mode}
+        setMode={setMode}
+        resetGame={resetGame}
+        hasPgn={!!pgn}
+        isGameLoaded={isGameLoaded}
+      />
+
+      {/* История ходов */}
+      {mode !== "practice" && moveHistory.length > 0 && (
+        <MoveHistory
+          moveHistory={moveHistory}
+          currentMoveIndex={currentMoveIndex}
+          goToMove={goToMove}
+        />
+      )}
+    </div>
+  </Card>
+</div>
       </div>
     </div>
   );

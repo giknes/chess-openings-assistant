@@ -1,3 +1,4 @@
+import { Button, Cell } from '@salutejs/plasma-ui';
 import './GameControls.css';
 
 export default function GameControls({
@@ -8,33 +9,48 @@ export default function GameControls({
   isGameLoaded
 }) {
   return (
-    <div className="controls">
-      <div className="mode-selector">
-        <button
-          className={mode === "learn" ? "active" : ""}
+    <div className="game-controls-container">
+      {/* Строка с кнопками режимов */}
+      <div className="mode-buttons-row">
+        <Button
+          view={mode === "learn" ? "primary" : "secondary"}
+          size="s"
           onClick={() => setMode("learn")}
           disabled={!isGameLoaded && mode !== "free"}
+          className="mode-button"
         >
           Обучение
-        </button>
-        <button
-          className={mode === "practice" ? "active" : ""}
+        </Button>
+        
+        <Button
+          view={mode === "practice" ? "primary" : "secondary"}
+          size="s"
           onClick={() => setMode("practice")}
           disabled={!isGameLoaded && mode !== "free"}
+          className="mode-button"
         >
           Проверка
-        </button>
-        <button
-          className={mode === "free" ? "active" : ""}
+        </Button>
+        
+        <Button
+          view={mode === "free" ? "primary" : "secondary"}
+          size="s"
           onClick={() => setMode("free")}
+          className="mode-button"
         >
-          Свободная игра
-        </button>
+          Свободная
+        </Button>
       </div>
 
-      <button className="reset-button" onClick={resetGame}>
+      {/* Кнопка сброса */}
+      <Button
+        view="warning"
+        size="s"
+        onClick={resetGame}
+        className="reset-button"
+      >
         {hasPgn && mode !== "free" ? "Перезагрузить партию" : "Новая игра"}
-      </button>
+      </Button>
     </div>
   );
 }

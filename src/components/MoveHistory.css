@@ -1,68 +1,66 @@
-.history-section {
-  background: #f8f9fa;
-  border-radius: 10px;
-  padding: 15px;
+.history-card {
+  background: var(--plasma-colors-surface-solid-card);
+  border-radius: 12px;
+}
+
+.moves-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 8px;
+  margin: 12px 0;
+}
+
+.move-item {
+  padding: 8px 12px;
+  background: var(--plasma-colors-surface-solid02);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.move-item:hover {
+  background: rgba(var(--plasma-colors-surface-solid03-rgb), 0.3) !important;
+}
+
+.move-item.active {
+  background: rgba(var(--plasma-colors-primary-rgb), 0.3) !important; /* Прозрачность 30% */
+  color: inherit; /* Оставляем обычный цвет текста */
+  border: 1px solid var(--plasma-colors-primary);
+}
+
+.navigation-buttons {
+  margin-top: 16px;
+}
+
+/* Полоса прокрутки */
+.moves-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.moves-container::-webkit-scrollbar-thumb {
+  background: var(--plasma-colors-secondary);
+  border-radius: 3px;
+}
+
+.history-card {
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-height: 0; /* Критически важно */
+  overflow: hidden;
 }
 
-.history-section h3 {
-  margin: 0 0 15px 0;
-  color: #2c3e50;
-  font-size: 1.2rem;
-  text-align: center;
-}
-
-.moves-list {
+.moves-container {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 8px;
-  max-height: 300px;
-  padding: 5px;
-}
-
-.move {
-  padding: 8px 12px;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  cursor: pointer;
-  text-align: center;
-  transition: all 0.2s;
-}
-
-.move.active {
-  background: #007bff;
-  color: white;
-}
-
-.move-buttons {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 15px;
-}
-
-.move-buttons button {
-  padding: 8px 16px;
-  background: #6c757d;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.move-buttons button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* Адаптация для маленьких экранов, если она относится только к истории */
-@media (max-width: 992px) {
-  .moves-list {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  }
+  padding: 8px;
+  margin: 12px 0;
 }

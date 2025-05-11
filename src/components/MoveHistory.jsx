@@ -1,36 +1,52 @@
 import React from 'react';
-import './MoveHistory.css'
+import { Card, Button, Cell, Row, Col } from '@salutejs/plasma-ui';
+import './MoveHistory.css';
 
-function MoveHistory({ moveHistory, currentMoveIndex, goToMove }) {
+function MoveHistory({ moveHistory = [], currentMoveIndex = -1, goToMove = () => {} }) {
+  // Защита от undefined
+  if (!Array.isArray(moveHistory)) return null;
+
   return (
-    <div className="history-section">
-      <h3>История ходов</h3>
-      <div className="moves-list">
+    <Card className="history-card" style={{ padding: '1rem', margin: '1rem 0' }}>
+      <Cell header="История ходов" />
+      
+      <div className="moves-container">
         {moveHistory.map((move, index) => (
           <div
-            key={index}
-            className={`move ${index === currentMoveIndex ? 'active' : ''}`}
+            key={`${index}-${move}`}
+            className={`move-item ${index === currentMoveIndex ? 'active' : ''}`}
             onClick={() => goToMove(index)}
           >
             {index % 2 === 0 ? `${Math.floor(index/2) + 1}.` : ''} {move}
           </div>
         ))}
       </div>
-      <div className="move-buttons">
-        <button
-          onClick={() => goToMove(currentMoveIndex - 1)}
-          disabled={currentMoveIndex < 0}
-        >
-          ← Назад
-        </button>
-        <button
-          onClick={() => goToMove(currentMoveIndex + 1)}
-          disabled={currentMoveIndex >= moveHistory.length - 1}
-        >
-          Вперед →
-        </button>
-      </div>
-    </div>
+
+      <Row className="navigation-buttons">
+        <Col>
+          <Button
+            view="secondary"
+            size="s"
+            onClick={() => goToMove(currentMoveIndex - 1)}
+            disabled={currentMoveIndex < 0}
+            stretch
+          >
+            ← Назад
+          </Button>
+        </Col>
+        <Col>
+          <Button
+            view="secondary"
+            size="s"
+            onClick={() => goToMove(currentMoveIndex + 1)}
+            disabled={currentMoveIndex >= moveHistory.length - 1}
+            stretch
+          >
+            Вперед →
+          </Button>
+        </Col>
+      </Row>
+    </Card>
   );
 }
 
