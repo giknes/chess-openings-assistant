@@ -11,7 +11,7 @@ def get_openings():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute('SELECT id, name, description FROM openings')
-    openings = [{'id': row[0], 'name': row[1]} for row in cursor.fetchall()]
+    openings = [{'id': row[0], 'name': row[1], 'description': row[2]} for row in cursor.fetchall()]
     conn.close()
     return jsonify(openings)
 
