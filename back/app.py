@@ -10,7 +10,7 @@ DB_PATH = os.path.join('data', 'openings.db')
 def get_openings():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute('SELECT id, name FROM openings')
+    cursor.execute('SELECT id, name, description FROM openings')
     openings = [{'id': row[0], 'name': row[1]} for row in cursor.fetchall()]
     conn.close()
     return jsonify(openings)
@@ -19,7 +19,7 @@ def get_openings():
 def get_opening(opening_id):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute('SELECT id, name, description, fen FROM openings WHERE id = ?', (opening_id,))
+    cursor.execute('SELECT * FROM openings WHERE id = ?', (opening_id,))
     row = cursor.fetchone()
     conn.close()
     if row:
