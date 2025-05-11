@@ -32,7 +32,9 @@
   flex-direction: column;
   height: calc(100vh - 100px);
   max-height: 800px;
-  overflow: hidden;
+  overflow: hidden; /* Основное свойство, которое отключает прокрутку */
+  overflow-x: hidden; /* Специально отключаем горизонтальную прокрутку */
+  overflow-y: auto; /* Вертикальная прокрутка остается, если контент не помещается */
 }
 
 .right-panel > .card {
@@ -42,6 +44,10 @@
   min-height: 0;
   overflow: hidden;
   padding: 1.5rem;
+
+  overflow: hidden; /* Основное свойство, которое отключает прокрутку */
+  overflow-x: hidden; /* Специально отключаем горизонтальную прокрутку */
+  overflow-y: auto; /* Вертикальная прокрутка остается, если контент не помещается */
 }
 
 .right-panel .card-content {
@@ -51,6 +57,10 @@
   min-height: 0;
   overflow-y: auto;
   gap: 1.5rem;
+
+  overflow: hidden; /* Основное свойство, которое отключает прокрутку */
+  overflow-x: hidden; /* Специально отключаем горизонтальную прокрутку */
+  overflow-y: auto; /* Вертикальная прокрутка остается, если контент не помещается */
 }
 
 /* Chess board styles */
