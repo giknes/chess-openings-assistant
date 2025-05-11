@@ -1,3 +1,5 @@
+import './GameControls.css';
+
 export default function GameControls({
   mode,
   setMode,

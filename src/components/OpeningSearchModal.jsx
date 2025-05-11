@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import './MoveHistory.css'
 
 export default function OpeningSearchModal ({ 
   isOpen, 

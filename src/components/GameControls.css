@@ -1,0 +1,28 @@
+.controls-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 15px;
+}
+
+/* Кнопка поиска */
+.search-button {
+  padding: 12px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.search-button:hover {
+  background: #3e8e41;
+}

@@ -3,11 +3,19 @@ import "./index.css";
 import { App } from "./App";
 import { createRoot } from 'react-dom/client';
 
+import { DeviceThemeProvider, SSRProvider } from '@salutejs/plasma-ui';
+import { GlobalStyle } from './GlobalStyle.tsx';
+
 const container = document.getElementById('root');
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
 
 root.render(
-    <App />
+    <DeviceThemeProvider>
+        <SSRProvider>
+            <App />
+            <GlobalStyle />
+        </SSRProvider>
+    </DeviceThemeProvider>,
 );
 
 

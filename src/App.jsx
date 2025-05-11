@@ -3,7 +3,6 @@ import { createAssistant, createSmartappDebugger } from '@salutejs/client';
 
 import './App.css';
 import ChessGamePage from './pages/ChessGame'
-// import { TaskList } from './pages/TaskList';
 
 const initializeAssistant = (getState /*: any*/, getRecoveryState) => {
   if (process.env.NODE_ENV === 'development') {
@@ -27,10 +26,6 @@ export class App extends React.Component {
   constructor(props) {
     super(props);
     console.log('constructor');
-
-    // this.state = {
-    //   notes: [{ id: Math.random().toString(36).substring(7), title: 'тест' }],
-    // };
 
     this.assistant = initializeAssistant(() => this.getStateForAssistant());
 
@@ -168,7 +163,7 @@ export class App extends React.Component {
   render() {
     console.log('render');
     return (
-      <>
+      <> 
         <ChessGamePage />
       </>
     );

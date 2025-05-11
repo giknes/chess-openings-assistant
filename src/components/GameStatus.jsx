@@ -1,3 +1,5 @@
+import './GameStatus.css'
+
 export default function GameStatus({ game, errorMessage }) {
   const getStatus = () => {
     if (errorMessage) return { 

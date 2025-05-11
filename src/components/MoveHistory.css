@@ -1,0 +1,68 @@
+.history-section {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 15px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.history-section h3 {
+  margin: 0 0 15px 0;
+  color: #2c3e50;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.moves-list {
+  flex: 1;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+  max-height: 300px;
+  padding: 5px;
+}
+
+.move {
+  padding: 8px 12px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.move.active {
+  background: #007bff;
+  color: white;
+}
+
+.move-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.move-buttons button {
+  padding: 8px 16px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.move-buttons button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Адаптация для маленьких экранов, если она относится только к истории */
+@media (max-width: 992px) {
+  .moves-list {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+}

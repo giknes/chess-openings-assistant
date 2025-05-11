@@ -2,10 +2,9 @@ import { useState, useEffect } from "react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import OpeningSearchModal from './OpeningSearchModal';
-import MoveNavigator from './MoveNavigator';
 import GameControls from './GameControls';
 import GameStatus from './GameStatus';
-import GameHistory from "./GameHistory";
+import MoveHistory from "./MoveHistory";
 import SearchIcon from "./SearchIcon";
 import './ChessBoard.css';
 
@@ -17,6 +16,9 @@ export default function ChessBoardComponent({ pgn = "", initialMode = "learn" })
   const [errorMessage, setErrorMessage] = useState("");
   const [isGameLoaded, setIsGameLoaded] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [selectedSquare, setSelectedSquare] = useState(null);
+  const [possibleMoves, setPossibleMoves] = useState([]);
 
   // Загрузка PGN при изменении пропса
   useEffect(() => {
@@ -137,6 +139,47 @@ export default function ChessBoardComponent({ pgn = "", initialMode = "learn" })
     }
   };
 
+  const onSquareClick = (square) => {
+    if (selectedSquare === null) {
+      // No square selected, select a piece
+      if (game.get(square) && game.turn() === game.get(square).color) {
+        const moves = game.moves({ square: square, verbose: true });
+        setSelectedSquare(square);
+        setPossibleMoves(moves);
+      }
+    } else {
+      // Square is selected, move the piece
+      const move = possibleMoves.find((m) => m.to === square);
+      if (move) {
+        game.move(move.san); // Make the move
+        setGame(new Chess(game.fen())); // Update the game state
+        setSelectedSquare(null);
+        setPossibleMoves([]);
+      } else {
+        // Clicked on an invalid square, deselect or select a different piece.
+        if (game.get(square) && game.turn() === game.get(square).color) {
+          const moves = game.moves({ square: square, verbose: true });
+          setSelectedSquare(square);
+          setPossibleMoves(moves);
+        } else {
+          setSelectedSquare(null);
+          setPossibleMoves([]);
+        }
+      }
+    }
+  };
+
+  const getSquareClassName = (square) => {
+    let className = '';
+    if (selectedSquare === square) {
+        className += 'selected ';  // Add a space after the class
+    }
+    if (possibleMoves.some(move => move.to === square)) {
+        className += 'possible ';   // Add a space after the class
+    }
+    return className;
+  };
+
   return (
     <div className="chess-app-container">
       {/* Модальное окно поиска (первое в DOM) */}
@@ -152,7 +195,10 @@ export default function ChessBoardComponent({ pgn = "", initialMode = "learn" })
         <div className="chessboard-area">
           <Chessboard
             position={game.fen()}
+            boardOrientation={isFlipped ? 'black' : 'white'}
             onPieceDrop={onDrop}
+            onSquareClick={onSquareClick}
+            squareClassName={getSquareClassName}
             boardWidth={Math.min(600, window.innerWidth - 350)}
             customDarkSquareStyle={{ backgroundColor: "#b58863" }}
             customLightSquareStyle={{ backgroundColor: "#f0d9b5" }}
@@ -170,6 +216,13 @@ export default function ChessBoardComponent({ pgn = "", initialMode = "learn" })
               <SearchIcon /> Поиск дебюта
             </button>
             <GameStatus game={game} errorMessage={errorMessage} />
+            {/* Кнопка ориентации доски */}
+            <button
+              className="orientation-button"
+              onClick={() => setIsFlipped(!isFlipped)}
+            >
+              Смена ориентации доски
+            </button>
           </div>
 
           {/* Контролы режимов */}
@@ -183,34 +236,11 @@ export default function ChessBoardComponent({ pgn = "", initialMode = "learn" })
 
           {/* История ходов */}
           {mode !== "practice" && moveHistory.length > 0 && (
-            <div className="history-section">
-              <h3>История ходов</h3>
-              <div className="moves-list">
-                {moveHistory.map((move, index) => (
-                  <div
-                    key={index}
-                    className={`move ${index === currentMoveIndex ? 'active' : ''}`}
-                    onClick={() => goToMove(index)}
-                  >
-                    {index % 2 === 0 ? `${Math.floor(index/2) + 1}.` : ''} {move}
-                  </div>
-                ))}
-              </div>
-              <div className="move-buttons">
-                <button 
-                  onClick={() => goToMove(currentMoveIndex - 1)}
-                  disabled={currentMoveIndex < 0}
-                >
-                  ← Назад
-                </button>
-                <button
-                  onClick={() => goToMove(currentMoveIndex + 1)}
-                  disabled={currentMoveIndex >= moveHistory.length - 1}
-                >
-                  Вперед →
-                </button>
-              </div>
-            </div>
+            <MoveHistory
+            moveHistory={moveHistory}
+            currentMoveIndex={currentMoveIndex}
+            goToMove={goToMove}
+          />
           )}
         </div>
       </div>
