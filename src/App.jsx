@@ -1,171 +1,172 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback,useRef } from 'react';
+import { Chess } from 'chess.js';
 import { createAssistant, createSmartappDebugger } from '@salutejs/client';
 
 import './App.css';
-import ChessGamePage from './pages/ChessGame'
+import {
+  setupGame,
+  goToMove,
+  handleOnDrop,
+  resetGame,
+  handleOpeningSelect,
+  handleCastling
+} from './components/ChessLogic';
+import ChessBoardComponent from './components/ChessBoard';
 
-const initializeAssistant = (getState /*: any*/, getRecoveryState) => {
+const initializeAssistant = (getState) => {
   if (process.env.NODE_ENV === 'development') {
     return createSmartappDebugger({
       token: process.env.REACT_APP_TOKEN ?? '',
       initPhrase: `Запусти ${process.env.REACT_APP_SMARTAPP}`,
-      getState,                                           
-      // getRecoveryState: getState,                                           
+      getState,
       nativePanel: {
-        defaultText: 'ччччччч',
+        defaultText: 'Шахматный помощник',
         screenshotMode: false,
-        tabIndex: -1,
-    },
+      },
     });
-  } else {
-  return createAssistant({ getState });
   }
+  return createAssistant({ getState });
 };
 
-export class App extends React.Component {
-  constructor(props) {
-    super(props);
-    console.log('constructor');
+function App() {
+  const [assistant, setAssistant] = useState(null);
+  const [chessState, setChessState] = useState({
+    game: new Chess(),
+    moveHistory: [],
+    currentMoveIndex: -1,
+    mode: 'learn',
+    isFlipped: false,
+    isSearchOpen: false,
+    isGameLoaded: false,
+    pgn: '1. e4 e5 2. Nf3 Nc6 3. Bb5 a6',
+    errorMessage: ''
+  });
 
-    this.assistant = initializeAssistant(() => this.getStateForAssistant());
+  const dispatchRef = useRef();
 
-    this.assistant.on('data', (event /*: any*/) => {
-      console.log(`assistant.on(data)`, event);
-      if (event.type === 'character') {
-        console.log(`assistant.on(data): character: "${event?.character?.id}"`);
-      } else if (event.type === 'insets') {
-        console.log(`assistant.on(data): insets`);
-      } else {
-        const { action } = event;
-        this.dispatchAssistantAction(action);
-      }
+  const getStateForAssistant = useCallback(() => ({
+  }), []);
+
+  // Инициализация ассистента
+  useEffect(() => {
+    const newAssistant = initializeAssistant(getStateForAssistant);
+    
+    const handleData = (event) => {
+      if (event.action) dispatchRef.current(event.action);
+    };
+
+    newAssistant.on('data', handleData);
+    newAssistant.on('start', (event) => {
     });
 
-    this.assistant.on('start', (event) => {
-      let initialData = this.assistant.getInitialData();
-
-      console.log(`assistant.on(start)`, event, initialData);
-    });
-
-    this.assistant.on('command', (event) => {
+    newAssistant.on('command', (event) => {
       console.log(`assistant.on(command)`, event);
     });
 
-    this.assistant.on('error', (event) => {
+    newAssistant.on('error', (event) => {
       console.log(`assistant.on(error)`, event);
     });
 
-    this.assistant.on('tts', (event) => {
+    newAssistant.on('tts', (event) => {
       console.log(`assistant.on(tts)`, event);
     });
-  }
+    setAssistant(newAssistant);
+  }, [getStateForAssistant]);
 
-  componentDidMount() {
-    console.log('componentDidMount');
-  }
+  const speak = useCallback((text) => {
+    assistant?.sendData({ action: { action_id: 'speak', parameters: { value: text } } });
+  }, [assistant]);
 
-  // getStateForAssistant() {
-  //   console.log('getStateForAssistant: this.state:', this.state);
-  //   const state = {
-  //     item_selector: {
-  //       items: this.state.notes.map(({ id, title }, index) => ({
-  //         number: index + 1,
-  //         id,
-  //         title,
-  //       })),
-  //       ignored_words: [
-  //         'добавить','установить','запиши','поставь','закинь','напомнить', // addNote.sc
-  //         'удалить', 'удали',  // deleteNote.sc
-  //         'выполни', 'выполнил', 'сделал' // выполнил|сделал
-  //       ],
-  //     },
-  //   };
-  //   console.log('getStateForAssistant: state:', state);
-  //   return state;
-  // }
+  // Основные функции игры
+   // Используйте useGameSetup для загрузки/сброса игры
+   useEffect(() => {
+    setupGame(chessState.pgn, chessState.mode, setChessState);
+  }, [chessState.pgn, chessState.mode]);
 
-  // dispatchAssistantAction(action) {
-  //   console.log('dispatchAssistantAction', action);
-  //   if (action) {
-  //     switch (action.type) {
-  //       case 'add_note':
-  //         return this.add_note(action);
 
-  //       case 'done_note':
-  //         return this.done_note(action);
+   // Оберните handleOnDrop, чтобы передать setChessState и chessState
+   const handlePieceDrop = useCallback((sourceSquare, targetSquare, piece) => {
+    handleOnDrop(sourceSquare, targetSquare, piece, chessState.mode, setChessState, chessState.game,
+       chessState.moveHistory, chessState.currentMoveIndex, speak);
+  }, [chessState.game, chessState.mode, chessState.currentMoveIndex, chessState.moveHistory, speak]);
 
-  //       case 'delete_note':
-  //         return this.delete_note(action);
+  const handleMoveSelect = useCallback((index) => {
+      goToMove(index, setChessState, speak);
+  }, [speak]);
 
-  //       default:
-  //         throw new Error();
-  //     }
-  //   }
-  // }
+  const handleOpeningSelection = useCallback((opening) => {
+      handleOpeningSelect(opening, setChessState)
+  }, []);
 
-  // add_note(action) {
-  //   console.log('add_note', action);
-  //   this.setState({
-  //     notes: [
-  //       ...this.state.notes,
-  //       {
-  //         id: Math.random().toString(36).substring(7),
-  //         title: action.note,
-  //         completed: false,
-  //       },
-  //     ],
-  //   });
-  // }
+  const handleFlipBoard = useCallback(() => {
+      setChessState(prevState => ({
+          ...prevState,
+          isFlipped: !prevState.isFlipped
+      }));
+  }, []);
 
-  // done_note(action) {
-  //   console.log('done_note', action);
-  //   this.setState({
-  //     notes: this.state.notes.map((note) =>
-  //       note.id === action.id ? { ...note, completed: !note.completed } : note
-  //     ),
-  //   });
-  // }
+  const handleResetGame = useCallback(() => {
+      resetGame(chessState.pgn, chessState.mode, setChessState);
+  }, [chessState.pgn, chessState.mode]);
 
-  _send_action_value(action_id, value) {
-    const data = {
-      action: {
-        action_id: action_id,
-        parameters: {
-          // значение поля parameters может быть любым, но должно соответствовать серверной логике
-          value: value, // см.файл src/sc/noteDone.sc смартаппа в Studio Code
-        },
-      },
+  const handleChangeMode = useCallback((mode) => {
+      setChessState(prev => ({ ...prev, mode }));
+  }, []);
+
+  const handleToggleSearch = useCallback((isOpen) => {
+      setChessState(prev => ({ ...prev, isSearchOpen: isOpen }));
+  }, []);
+
+  const handleNextMove = useCallback(() => {
+    goToMove(chessState.currentMoveIndex + 1, setChessState, speak);
+  }, [chessState.currentMoveIndex, speak]);
+
+  const handlePrevMove = useCallback(() => {
+    goToMove(chessState.currentMoveIndex - 1, setChessState, speak);
+  }, [chessState.currentMoveIndex, speak]);
+
+  const handleCastle= useCallback((type) => {
+    handleCastling(type, chessState.game, setChessState, speak);
+  }, [chessState.game, speak]);
+
+  const dispatchAssistantAction = useCallback((action) => {
+    const actionHandlers = {
+      reset_game: () => handleResetGame(),
+      change_mode: () => handleChangeMode(action.mode),
+      flip_board: () => handleFlipBoard(),
+      open_openings: () => handleToggleSearch(true),
+      close_openings: () => handleToggleSearch(false),
+      select_opening: () => handleOpeningSelection(action.name),
+      next_move: () => handleNextMove(),
+      prev_move: () => handlePrevMove(),
+      make_move: () => handlePieceDrop(action.from, action.to, action.promotion),
+      short_castle: () => handleCastle("short"),
+      long_castle: () => handleCastle("long"),
     };
-    const unsubscribe = this.assistant.sendData(data, (data) => {
-      // функция, вызываемая, если на sendData() был отправлен ответ
-      const { type, payload } = data;
-      console.log('sendData onData:', type, payload);
-      unsubscribe();
-    });
-  }
 
-  // play_done_note(id) {
-  //   const completed = this.state.notes.find(({ id }) => id)?.completed;
-  //   if (!completed) {
-  //     const texts = ['Молодец!', 'Красавчик!', 'Супер!'];
-  //     const idx = (Math.random() * texts.length) | 0;
-  //     this._send_action_value('done', texts[idx]);
-  //   }
-  // }
+    if (actionHandlers[action.type]) {
+      actionHandlers[action.type]();
+    }
+  }, [handleChangeMode, handleFlipBoard, handleNextMove, handleToggleSearch,
+    handleOpeningSelection, handlePieceDrop, handlePrevMove, handleResetGame, handleCastle
+  ]);
 
-  // delete_note(action) {
-  //   console.log('delete_note', action);
-  //   this.setState({
-  //     notes: this.state.notes.filter(({ id }) => id !== action.id),
-  //   });
-  // }
+  useEffect(() => {
+    dispatchRef.current = dispatchAssistantAction;
+  }, [dispatchAssistantAction]);
 
-  render() {
-    console.log('render');
-    return (
-      <> 
-        <ChessGamePage />
-      </>
-    );
-  }
+  return (
+    <ChessBoardComponent
+      chessState={chessState}
+      onPieceDrop={handlePieceDrop}
+      onMoveSelect={handleMoveSelect}
+      onChangeMode={handleChangeMode}
+      onFlipBoard={handleFlipBoard}
+      onToggleSearch={handleToggleSearch}
+      onSelectOpening={handleOpeningSelection}
+      onReset={handleResetGame}
+    />
+  );
 }
+
+export default App;

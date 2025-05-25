@@ -3,7 +3,7 @@ import './GameControls.css';
 
 export default function GameControls({
   mode,
-  setMode,
+  onChangeMode,
   resetGame,
   hasPgn,
   isGameLoaded
@@ -15,7 +15,7 @@ export default function GameControls({
         <Button
           view={mode === "learn" ? "primary" : "secondary"}
           size="s"
-          onClick={() => setMode("learn")}
+          onClick={() => onChangeMode("learn")}
           disabled={!isGameLoaded && mode !== "free"}
           className="mode-button"
         >
@@ -25,7 +25,7 @@ export default function GameControls({
         <Button
           view={mode === "practice" ? "primary" : "secondary"}
           size="s"
-          onClick={() => setMode("practice")}
+          onClick={() => onChangeMode("practice")}
           disabled={!isGameLoaded && mode !== "free"}
           className="mode-button"
         >
@@ -35,7 +35,7 @@ export default function GameControls({
         <Button
           view={mode === "free" ? "primary" : "secondary"}
           size="s"
-          onClick={() => setMode("free")}
+          onClick={() => onChangeMode("free")}
           className="mode-button"
         >
           Свободная

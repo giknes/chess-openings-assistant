@@ -1,10 +1,27 @@
-import ChessBoardComponent from '../components/ChessBoard'
+import ChessBoardComponent from '../components/ChessBoard';
 
-export default function ChessGamePage(){
+const ChessGamePage = ({
+  chessState,
+  onPieceDrop,
+  onMoveSelect,
+  onChangeMode,
+  onFlipBoard,
+  onToggleSearch,
+  onSelectOpening,
+  onReset
+}) => {
   return (
-    <ChessBoardComponent
-      pgn="1. e4 e5 2. Nf3 Nc6 3. Bb5 a6" 
-      mode="learn"
-    />
+      <ChessBoardComponent
+        chessState={chessState}
+        onPieceDrop={onPieceDrop}
+        onMoveSelect={onMoveSelect}
+        onChangeMode={onChangeMode}
+        onFlipBoard={onFlipBoard}
+        onToggleSearch={onToggleSearch}
+        onSelectOpening={onSelectOpening}
+        onReset={onReset}
+      />
   );
-}
+};
+
+export default ChessGamePage;

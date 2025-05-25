@@ -1,190 +1,78 @@
-import { useState, useEffect } from "react";
-import { Chess } from "chess.js";
+import { useState } from "react";
 import { Chessboard } from "react-chessboard";
 import OpeningSearchModal from './OpeningSearchModal';
 import GameControls from './GameControls';
 import GameStatus from './GameStatus';
 import MoveHistory from "./MoveHistory";
-import SearchIcon from "./SearchIcon";
 import './ChessBoard.css';
 
 import { 
   Button,
   Card,
-  TextBox,
-  Cell,
 } from '@salutejs/plasma-ui';
 
-export default function ChessBoardComponent({ pgn = "", initialMode = "learn" }) {
-  const [mode, setMode] = useState(initialMode);
-  const [game, setGame] = useState(new Chess());
-  const [moveHistory, setMoveHistory] = useState([]);
-  const [currentMoveIndex, setCurrentMoveIndex] = useState(-1);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [isGameLoaded, setIsGameLoaded] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isFlipped, setIsFlipped] = useState(false);
+export default function ChessBoardComponent({
+  chessState,
+  onPieceDrop,
+  onMoveSelect,
+  onChangeMode,
+  onFlipBoard,
+  onToggleSearch,
+  onSelectOpening,
+  onReset
+}) {
+
+  const {
+      game,
+      moveHistory,
+      currentMoveIndex,
+      mode,
+      isFlipped,
+      isSearchOpen,
+      isGameLoaded,
+      errorMessage,
+      pgn
+  } = chessState;
+
   const [selectedSquare, setSelectedSquare] = useState(null);
   const [possibleMoves, setPossibleMoves] = useState([]);
 
-  // Загрузка PGN при изменении пропса
-  useEffect(() => {
-    if (pgn && mode !== "free") {
-      loadPgnGame();
-    } else if (mode === "free") {
-      resetGame();
-    }
-  }, [pgn, mode]);
 
-  const loadPgnGame = () => {
-    try {
-      const chess = new Chess();
-      chess.loadPgn(pgn);
-      setGame(new Chess()); // Начальная позиция
-      setMoveHistory(chess.history());
-      setCurrentMoveIndex(-1);
-      setIsGameLoaded(true);
-      setErrorMessage("");
-    } catch (e) {
-      setErrorMessage("Неверный формат PGN");
-      setIsGameLoaded(false);
-    }
-  };
-
-  const goToMove = (index) => {
-    try {
-      if (index < currentMoveIndex) {
-        const chess = new Chess();
-        const movesToApply = moveHistory.slice(0, index + 1);
-        movesToApply.forEach(move => chess.move(move));
-        setGame(chess);
-      } else if (index > currentMoveIndex) {
-        const chess = new Chess(game.fen());
-        const movesToApply = moveHistory.slice(currentMoveIndex + 1, index + 1);
-        movesToApply.forEach(move => chess.move(move));
-        setGame(chess);
-      }
-      setCurrentMoveIndex(index);
-      setErrorMessage("");
-    } catch (e) {
-      setErrorMessage("Ошибка при переходе к ходу");
-    }
-  };
-
-  const makePlayerMove = (move) => {
-    const correctMove = moveHistory[currentMoveIndex + 1];
-    
-    if (move.san === correctMove) {
-      const chess = new Chess(game.fen());
-      chess.move(move);
-      setGame(chess);
-      setCurrentMoveIndex(currentMoveIndex + 1);
-      setErrorMessage("");
-      return true;
-    } else {
-      setErrorMessage(`Ошибка! Правильный ход: ${correctMove}`);
-      return false;
-    }
-  };
-
-  const onDrop = (sourceSquare, targetSquare, piece) => {
-    if (mode === "learn") return false;
-
-    try {
-      const move = {
-        from: sourceSquare,
-        to: targetSquare,
-        promotion: piece[1].toLowerCase() || "q"
-      };
-
-      const chess = new Chess(game.fen());
-      const result = chess.move(move);
-      
-      if (mode === "practice") {
-        return makePlayerMove(result);
-      }
-
-      if (mode === "free") {
-        setGame(chess);
-        setMoveHistory([...moveHistory, result.san]);
-        setCurrentMoveIndex(currentMoveIndex + 1);
-      }
-      
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
-  const resetGame = () => {
-    if (pgn && mode !== "free") {
-      loadPgnGame();
-    } else {
-      setGame(new Chess());
-      setMoveHistory([]);
-      setCurrentMoveIndex(-1);
-      setIsGameLoaded(true);
-      setErrorMessage("");
-    }
-  };
-
-  const handleOpeningSelect = async (opening) => {
-    try {
-      const response = await fetch(`/api/openings/${opening.id}`);
-      const { pgn } = await response.json();
-      
-      const chess = new Chess();
-      chess.loadPgn(pgn);
-      setGame(new Chess()); // Начальная позиция
-      setMoveHistory(chess.history());
-      setCurrentMoveIndex(-1);
-      setIsGameLoaded(true);
-      setErrorMessage("");
-      setIsSearchOpen(false);
-    } catch (error) {
-      setErrorMessage("Ошибка загрузки дебюта");
-    }
-  };
-
-  const onSquareClick = (square) => {
-    if (selectedSquare === null) {
-      // No square selected, select a piece
-      if (game.get(square) && game.turn() === game.get(square).color) {
-        const moves = game.moves({ square: square, verbose: true });
-        setSelectedSquare(square);
-        setPossibleMoves(moves);
-      }
-    } else {
-      // Square is selected, move the piece
-      const move = possibleMoves.find((m) => m.to === square);
-      if (move) {
-        game.move(move.san); // Make the move
-        setGame(new Chess(game.fen())); // Update the game state
-        setSelectedSquare(null);
-        setPossibleMoves([]);
+  const handleSquareClick = (square) => {
+      if (selectedSquare === null) {
+          if (game.get(square) && game.turn() === game.get(square).color) {
+              const moves = game.moves({ square: square, verbose: true });
+              setSelectedSquare(square);
+              setPossibleMoves(moves);
+          }
       } else {
-        // Clicked on an invalid square, deselect or select a different piece.
-        if (game.get(square) && game.turn() === game.get(square).color) {
-          const moves = game.moves({ square: square, verbose: true });
-          setSelectedSquare(square);
-          setPossibleMoves(moves);
-        } else {
-          setSelectedSquare(null);
-          setPossibleMoves([]);
-        }
+          const move = possibleMoves.find((m) => m.to === square);
+          if (move) {
+              onPieceDrop(selectedSquare, square, move.piece); 
+              setSelectedSquare(null);
+              setPossibleMoves([]);
+          } else {
+              if (game.get(square) && game.turn() === game.get(square).color) {
+                  const moves = game.moves({ square: square, verbose: true });
+                  setSelectedSquare(square);
+                  setPossibleMoves(moves);
+              } else {
+                  setSelectedSquare(null);
+                  setPossibleMoves([]);
+              }
+          }
       }
-    }
   };
 
   const getSquareClassName = (square) => {
-    let className = '';
-    if (selectedSquare === square) {
-        className += 'selected ';  // Add a space after the class
-    }
-    if (possibleMoves.some(move => move.to === square)) {
-        className += 'possible ';   // Add a space after the class
-    }
-    return className;
+      let className = '';
+      if (selectedSquare === square) {
+          className += 'selected ';  
+      }
+      if (possibleMoves.some(move => move.to === square)) {
+          className += 'possible ';   
+      }
+      return className;
   };
 
   return (
@@ -192,8 +80,8 @@ export default function ChessBoardComponent({ pgn = "", initialMode = "learn" })
       {/* Модальное окно поиска (первое в DOM) */}
       <OpeningSearchModal
         isOpen={isSearchOpen}
-        onClose={() => setIsSearchOpen(false)}
-        onSelectOpening={handleOpeningSelect}
+        onClose={() => onToggleSearch(false)} // Используем prop
+        onSelectOpening={onSelectOpening}
       />
 
       {/* Основная сетка */}
@@ -203,8 +91,8 @@ export default function ChessBoardComponent({ pgn = "", initialMode = "learn" })
           <Chessboard
             position={game.fen()}
             boardOrientation={isFlipped ? 'black' : 'white'}
-            onPieceDrop={onDrop}
-            onSquareClick={onSquareClick}
+            onPieceDrop={onPieceDrop}
+            onSquareClick={handleSquareClick}
             squareClassName={getSquareClassName}
             boardWidth={Math.min(600, window.innerWidth - 350)}
             customBoardStyle={{
@@ -212,6 +100,8 @@ export default function ChessBoardComponent({ pgn = "", initialMode = "learn" })
             }}
             customDarkSquareStyle={{ backgroundColor: "#b58863" }}
             customLightSquareStyle={{ backgroundColor: "#f0d9b5" }}
+            
+            animationDuration={0}
           />
         </div>
 
@@ -230,7 +120,7 @@ export default function ChessBoardComponent({ pgn = "", initialMode = "learn" })
         <Button 
           view="primary" 
           size="s" 
-          onClick={() => setIsSearchOpen(true)}
+          onClick={() => onToggleSearch(true)}
           style={{ flex: 1 }}
         >
           Поиск дебюта
@@ -238,7 +128,7 @@ export default function ChessBoardComponent({ pgn = "", initialMode = "learn" })
         <Button 
           view="secondary" 
           size="s" 
-          onClick={() => setIsFlipped(!isFlipped)}
+          onClick={onFlipBoard}
           style={{ flex: 1 }}
         >
           Смена ориентации
@@ -251,8 +141,8 @@ export default function ChessBoardComponent({ pgn = "", initialMode = "learn" })
       {/* Кнопки режимов */}
       <GameControls
         mode={mode}
-        setMode={setMode}
-        resetGame={resetGame}
+        onChangeMode={onChangeMode}
+        resetGame={onReset}
         hasPgn={!!pgn}
         isGameLoaded={isGameLoaded}
       />
@@ -262,7 +152,7 @@ export default function ChessBoardComponent({ pgn = "", initialMode = "learn" })
         <MoveHistory
           moveHistory={moveHistory}
           currentMoveIndex={currentMoveIndex}
-          goToMove={goToMove}
+          goToMove={onMoveSelect}
         />
       )}
     </div>
