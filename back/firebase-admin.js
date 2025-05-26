@@ -1,6 +1,6 @@
 // firebase-admin.js
 const admin = require("firebase-admin");
-const serviceAccount = require("./back/back/data/chess-bd.json"); // Путь к ключу
+const serviceAccount = require("./back/data/chess-bd.json"); // Путь к ключу
 
 // Инициализация Firebase
 admin.initializeApp({
