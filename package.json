@@ -11,24 +11,16 @@
     "@types/node": "^20.12.7",
     "@types/react": "^18.2.79",
     "@types/react-dom": "^18.2.25",
-    "cors": "^2.8.5",
     "express": "^4.18.2",
     "firebase-admin": "^12.0.0",
-    "node-cache": "^5.1.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "^5.0.1",
     "styled-components": "^6.0.0",
     "typescript": "^4.9.5",
-<<<<<<< HEAD
-    "web-vitals": "^3.5.2"
-=======
     "web-vitals": "^3.5.2",
-    "express": "^4.18.2",
-    "firebase-admin": "^12.0.0",
     "node-cache": "^5.1.2",
-    "cors": "^2.8.5" 
->>>>>>> 269a8c52a05890eb817178635ee1c7ddfe4b6b69
+    "cors": "^2.8.5"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -39,18 +31,11 @@
     "dev-server": "nodemon server/server.js"
   },
   "devDependencies": {
-<<<<<<< HEAD
-    "@babel/plugin-transform-numeric-separator": "^7.24.1",
-    "@babel/plugin-transform-private-methods": "^7.24.1",
-    "eslint": "^9.0.0",
-    "nodemon": "^3.1.0"
-=======
     "nodemon": "^3.1.0",
     "eslint": "^8.57.1",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "eslint-plugin-react": "^7.33.2"
->>>>>>> 269a8c52a05890eb817178635ee1c7ddfe4b6b69
   },
   "eslintConfig": {
     "extends": [
