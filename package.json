@@ -34,11 +34,7 @@
   "devDependencies": {
     "nodemon": "^3.1.0",
     "@babel/plugin-transform-private-methods": "^7.24.1",
-    "@babel/plugin-transform-numeric-separator": "^7.24.1",
-    "@jridgewell/sourcemap-codec": "^1.4.15", 
-    "@rollup/plugin-terser": "^4.0.1", 
-    "rimraf": "^5.0.5",
-    "glob": "^10.3.12"
+    "@babel/plugin-transform-numeric-separator": "^7.24.1"
   },
   "eslintConfig": {
     "extends": [
