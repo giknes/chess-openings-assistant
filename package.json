@@ -16,7 +16,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "^5.0.1",
-    "styled-components": "^6.11.0",
+    "styled-components": "latest",
     "typescript": "^4.9.5",
     "web-vitals": "^3.5.2",
     "node-cache": "^5.1.2",
