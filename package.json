@@ -11,16 +11,16 @@
     "@types/node": "^20.12.7",
     "@types/react": "^18.2.79",
     "@types/react-dom": "^18.2.25",
+    "cors": "latest",
     "express": "^4.18.2",
     "firebase-admin": "^12.0.0",
+    "node-cache": "^5.1.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-scripts": "^5.0.1",
+    "react-scripts": "^3.0.1",
     "styled-components": "latest",
     "typescript": "^4.9.5",
-    "web-vitals": "^3.5.2",
-    "node-cache": "^5.1.2",
-    "cors": "latest"  
+    "web-vitals": "^3.5.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -31,11 +31,11 @@
     "dev-server": "nodemon server/server.js"
   },
   "devDependencies": {
-    "nodemon": "^3.1.0",
-    "eslint": "^8.56.0",
     "@typescript-eslint/eslint-plugin": "^7.8.0",
     "@typescript-eslint/parser": "^7.8.0",
-    "eslint-plugin-react": "^7.34.0"
+    "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.34.0",
+    "nodemon": "^3.1.0"
   },
   "eslintConfig": {
     "extends": [
