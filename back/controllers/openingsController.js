@@ -1,140 +1,105 @@
-const { db, FieldValue } = require('../utils/firebase');
-const cacheService = require('../services/cacheService');
+const { db, FieldValue } = require('../config/firebase-admin');
+const cache = require('../services/cacheService');
 const constants = require('../config/constants');
 
 module.exports = {
-  /**
-   * Получение всех дебютов с вариациями (только чтение)
-   */
   getAllOpenings: async (req, res) => {
     try {
       const cacheKey = constants.CACHE_KEYS.OPENINGS_ALL;
-      const cachedData = cacheService.get(cacheKey);
+      const cachedData = cache.get(cacheKey);
       
       if (cachedData) {
-        return res.json({
-          source: 'cache',
-          data: cachedData
-        });
+        return res.json({ source: 'cache', data: cachedData });
       }
 
-      // Получение неизменяемых данных из Firestore
       const openingsSnapshot = await db.collection(constants.FIRESTORE_COLLECTIONS.OPENINGS)
-        .select('name', 'eco', 'pgn') // Только неизменяемые поля
         .orderBy('popularity', 'desc')
         .get();
 
-      // Обработка данных (без запросов к вариациям, если они статичны)
-      const openings = openingsSnapshot.docs.map(doc => ({
-        id: doc.id,
-        name: doc.data().name,
-        eco: doc.data().eco,
-        pgn: doc.data().pgn,
-        // Если вариации статичны и не меняются, их можно хранить в основном документе
-        variations: doc.data().variations || [] 
-      }));
+      const openings = await Promise.all(
+        openingsSnapshot.docs.map(async (doc) => {
+          const variationsSnapshot = await doc.ref.collection(constants.FIRESTORE_COLLECTIONS.VARIATIONS).get();
+          
+          return {
+            id: doc.id,
+            name: doc.data().name,
+            eco: doc.data().eco,
+            popularity: doc.data().popularity,
+            pgn: doc.data().pgn,
+            variations: variationsSnapshot.docs.map(v => ({
+              id: v.id,
+              name: v.data().name,
+              pgn: v.data().pgn
+            }))
+          };
+        })
+      );
 
-      cacheService.set(cacheKey, openings, constants.CACHE_TTL.OPENINGS_LIST);
-      
-      res.json({
-        source: 'database',
-        data: openings
-      });
-      
+      cache.set(cacheKey, openings, constants.CACHE_TTL.OPENINGS_LIST);
+      res.json({ source: 'database', data: openings });
     } catch (error) {
       console.error('Error fetching openings:', error);
-      res.status(500).json({ 
-        error: constants.ERROR_MESSAGES.SERVER_ERROR 
-      });
+      res.status(500).json({ error: constants.ERROR_MESSAGES.SERVER_ERROR });
     }
   },
 
-  /**
-   * Получение конкретного дебюта по ID (только чтение)
-   */
   getOpeningById: async (req, res) => {
     try {
       const { id } = req.params;
       const cacheKey = constants.CACHE_KEYS.OPENING_BY_ID(id);
-      const cachedData = cacheService.get(cacheKey);
+      const cachedData = cache.get(cacheKey);
       
       if (cachedData) {
-        return res.json({
-          source: 'cache',
-          data: cachedData
-        });
+        return res.json({ source: 'cache', data: cachedData });
       }
 
-      const doc = await db.collection(constants.FIRESTORE_COLLECTIONS.OPENINGS)
-        .doc(id)
-        .get();
-      
+      const doc = await db.collection(constants.FIRESTORE_COLLECTIONS.OPENINGS).doc(id).get();
       if (!doc.exists) {
-        return res.status(404).json({ 
-          error: constants.ERROR_MESSAGES.OPENING_NOT_FOUND 
-        });
+        return res.status(404).json({ error: constants.ERROR_MESSAGES.OPENING_NOT_FOUND });
       }
 
-      const openingData = {
+      const variationsSnapshot = await doc.ref.collection(constants.FIRESTORE_COLLECTIONS.VARIATIONS).get();
+
+      const response = {
         id: doc.id,
         name: doc.data().name,
         eco: doc.data().eco,
-        popularity: doc.data().popularity, // Только для чтения
+        popularity: doc.data().popularity,
         pgn: doc.data().pgn,
-        variations: doc.data().variations || [] // Если вариации статичны
+        variations: variationsSnapshot.docs.map(v => ({
+          id: v.id,
+          name: v.data().name,
+          pgn: v.data().pgn,
+          description: v.data().description
+        }))
       };
 
-      cacheService.set(cacheKey, openingData, constants.CACHE_TTL.OPENING_DETAILS);
-      
-      res.json({
-        source: 'database',
-        data: openingData
-      });
-      
+      cache.set(cacheKey, response, constants.CACHE_TTL.OPENING_DETAILS);
+      res.json({ source: 'database', data: response });
     } catch (error) {
       console.error(`Error fetching opening ${id}:`, error);
-      res.status(500).json({ 
-        error: constants.ERROR_MESSAGES.SERVER_ERROR 
-      });
+      res.status(500).json({ error: constants.ERROR_MESSAGES.SERVER_ERROR });
     }
   },
 
-  /**
-   * Увеличение счетчика популярности (единственная операция записи)
-   */
   incrementPopularity: async (req, res) => {
     try {
       const { id } = req.params;
       const openingRef = db.collection(constants.FIRESTORE_COLLECTIONS.OPENINGS).doc(id);
       
-      // Атомарное обновление только поля popularity
-      await openingRef.update({
-        popularity: FieldValue.increment(1)
+      await openingRef.update({ 
+        popularity: FieldValue.increment(1) 
       });
 
-      // Инвалидация только связанных кэшей
-      cacheService.del([
+      cache.del([
         constants.CACHE_KEYS.OPENINGS_ALL,
         constants.CACHE_KEYS.OPENING_BY_ID(id)
       ]);
       
-      res.json({ 
-        success: true,
-        message: constants.SUCCESS_MESSAGES.POPULARITY_UPDATED
-      });
-      
+      res.sendStatus(200);
     } catch (error) {
-      console.error(`Error updating popularity for ${req.params.id}:`, error);
-      
-      if (error.code === 'not-found') {
-        return res.status(404).json({ 
-          error: constants.ERROR_MESSAGES.OPENING_NOT_FOUND 
-        });
-      }
-      
-      res.status(500).json({ 
-        error: constants.ERROR_MESSAGES.SERVER_ERROR 
-      });
+      console.error(`Error updating popularity for ${id}:`, error);
+      res.status(500).json({ error: constants.ERROR_MESSAGES.SERVER_ERROR });
     }
   }
 };
