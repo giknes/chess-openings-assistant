@@ -1,0 +1,58 @@
+{
+  "name": "salute-demo-app",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@salutejs/client": "=1.32.0",
+    "@testing-library/jest-dom": "^6.4.2",   
+    "@testing-library/react": "^13.4.0",      
+    "@testing-library/user-event": "^13.5.0",    
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.12.7",
+    "@types/react": "^18.2.79",
+    "@types/react-dom": "^18.2.25",
+    "express": "^4.18.2",
+    "firebase-admin": "^12.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "^5.0.1",
+    "styled-components": "latest",
+    "typescript": "^4.9.5", 
+    "web-vitals": "^3.5.2",
+    "node-cache": "^5.1.2",
+    "cors": "latest"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "start-server": "node server/server.js",
+    "dev-server": "nodemon server/server.js"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0",
+    "eslint": "^8.56.0",
+    "@typescript-eslint/eslint-plugin": "^7.8.0",
+    "@typescript-eslint/parser": "^7.8.0",
+    "eslint-plugin-react": "^7.34.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
