@@ -109,3 +109,4 @@ _temp/
 
 # Игнорировать Firebase-ключ
 data/firebase-key.json
+chess-bd.json
