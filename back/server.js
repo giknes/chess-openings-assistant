@@ -2,7 +2,7 @@
 require('dotenv').config();
 const express = require('express');
 const corsMiddleware = require('./middlewares/cors'); 
-const openingsRoutes = require('./routes/openings');
+const openingsRoutes = require('./routes/openingsRoutes');
 const app = express();
 
 // Middleware
