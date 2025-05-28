@@ -1,11 +1,15 @@
-// firebase-admin.js
-const admin = require("firebase-admin");
-const serviceAccount = require("./back/data/chess-bd.json"); // Путь к ключу
+const admin = require('firebase-admin');
+require('dotenv').config();
 
-// Инициализация Firebase
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.cert({
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
+  })
 });
 
-const db = admin.firestore(); // Получаем доступ к Firestore
-module.exports = { db }; // Экспортируем для использования в других файлах
+module.exports = {
+  db: admin.firestore(),
+  FieldValue: admin.firestore.FieldValue
+};
