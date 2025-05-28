@@ -29,6 +29,9 @@ coverage
 .grunt
 
 # Bower dependency directory (https://bower.io/)
+
+back/.env
+back/node_modules/
 bower_components
 
 # node-waf configuration
