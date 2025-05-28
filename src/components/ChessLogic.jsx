@@ -174,37 +174,34 @@ const resetGame = (pgn, mode, setChessState) => {
 };
 
 // --- Обработчик выбора дебюта ---
-const handleOpeningSelect = (opening, setChessState) => {
-  return async () => {
-    try {
-      const response = await fetch(`/api/openings/${opening.id}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const { pgn } = await response.json();
+const handleOpeningSelect = async (opening, setChessState) => {
+  try {
+    const API_BASE = 'http://localhost:3000';
+    const response = await fetch(`${API_BASE}/api/openings/${opening.id}`);
+    const result = await response.json();
+    const { pgn } = result.data;
 
-      setChessState(prevState => {
-        const chess = new Chess();
-        chess.loadPgn(pgn);
-        const newGame = new Chess(); 
-        return {
-          ...prevState,
-          game: newGame,
-          moveHistory: chess.history(),
-          currentMoveIndex: -1,
-          isGameLoaded: true,
-          errorMessage: "",
-          isSearchOpen: false
-        };
-      });
-    } catch (error) {
-      console.error("Ошибка загрузки дебюта:", error);
-      setChessState(prevState => ({
+    setChessState(prevState => {
+      const chess = new Chess();
+      chess.loadPgn(pgn);
+      const newGame = new Chess();
+      return {
         ...prevState,
-        errorMessage: "Ошибка загрузки дебюта"
-      }));
-    }
-  };
+        game: newGame,
+        moveHistory: chess.history(),
+        currentMoveIndex: -1,
+        isGameLoaded: true,
+        errorMessage: "",
+        isSearchOpen: false
+      };
+    });
+  } catch (error) {
+    console.error("Ошибка загрузки дебюта:", error);
+    setChessState(prevState => ({
+      ...prevState,
+      errorMessage: "Ошибка загрузки дебюта"
+    }));
+  }
 };
 
 function announceGameState(game, speak) {

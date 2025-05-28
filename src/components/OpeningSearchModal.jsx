@@ -20,27 +20,44 @@ export default function OpeningSearchModal({
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef(null);
 
-  // Автофокус на поле ввода при открытии
+  // Загрузка дебютов при открытии модального окна
   useEffect(() => {
-    if (isOpen && inputRef.current) {
-      inputRef.current.focus();
+    if (isOpen) {
+      loadOpenings();
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    } else {
+      // Очищаем результаты при закрытии
+      setOpenings([]);
+      setSearchTerm('');
     }
   }, [isOpen]);
 
-  const handleSearch = async () => {
-    if (!searchTerm.trim()) return;
-    
+  const loadOpenings = async (search = '') => {
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/openings?search=${encodeURIComponent(searchTerm)}`);
+      const API_BASE = 'http://localhost:3000';
+      const response = await fetch(`${API_BASE}/api/openings?search=${encodeURIComponent(search)}`);
+      
+      if (!response.ok) {
+        throw new Error(`Ошибка загрузки: ${response.status} ${response.statusText}`);
+      }
+  
       const data = await response.json();
-      setOpenings(data);
+      setOpenings(data.data || []);
+    } catch (error) {
+      console.error('Ошибка при загрузке дебютов:', error);
+      setOpenings([]); // Покажем пустой список
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Обработка нажатия Enter в поле ввода
+  const handleSearch = async () => {
+    await loadOpenings(searchTerm.trim());
+  };
+
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       handleSearch();
@@ -48,6 +65,11 @@ export default function OpeningSearchModal({
   };
 
   if (!isOpen) return null;
+
+  const filteredOpenings = openings.filter(op =>
+    op.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    op.eco.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="search-modal">
@@ -78,8 +100,8 @@ export default function OpeningSearchModal({
           </div>
         ) : (
           <div className="openings-list">
-            {openings.length > 0 ? (
-              openings.map(opening => (
+            {filteredOpenings.length > 0 ? (
+              filteredOpenings.map(opening => (
                 <Cell
                   key={opening.id}
                   content={<Body1>{opening.name}</Body1>}
@@ -103,7 +125,7 @@ export default function OpeningSearchModal({
               }}>
                 {searchTerm && !isLoading 
                   ? 'Ничего не найдено. Попробуйте другой запрос' 
-                  : 'Введите название дебюта для поиска'}
+                  : 'Загрузка дебютов...'}
               </Body1>
             )}
           </div>
