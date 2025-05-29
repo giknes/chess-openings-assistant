@@ -11,30 +11,39 @@
 
 .main-grid {
   display: flex;
+  flex-direction: row;
+  align-items: center;
   gap: 20px;
   width: 100%;
-  max-width: 1200px;
-  min-height: 0;
+  max-width: 1400px;
+}
+
+.controls-row {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
 }
 
 .chessboard-area {
-  flex: 1;
-  min-width: 400px;
+  flex: 0.8;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  justify-content: flex-start; 
+  align-items: center;
+  height: 100%;
+  max-height: calc(100vh - 120px);
 }
 
 .right-panel {
-  width: 350px;
+  flex: 1;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 100px);
+  height: auto;
+  min-height: 0;
   max-height: 800px;
   overflow: hidden; /* Основное свойство, которое отключает прокрутку */
   overflow-x: hidden; /* Специально отключаем горизонтальную прокрутку */
-  overflow-y: auto; /* Вертикальная прокрутка остается, если контент не помещается */
+  overflow-y: auto;
 }
 
 .right-panel > .card {
@@ -42,25 +51,17 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
-  overflow: hidden;
   padding: 1.5rem;
-
-  overflow: hidden; /* Основное свойство, которое отключает прокрутку */
-  overflow-x: hidden; /* Специально отключаем горизонтальную прокрутку */
-  overflow-y: auto; /* Вертикальная прокрутка остается, если контент не помещается */
+  overflow: hidden;
 }
 
-.right-panel .card-content {
-  flex: 1;
+.card-content {
   display: flex;
   flex-direction: column;
+  flex: 1;
   min-height: 0;
-  overflow-y: auto;
-  gap: 1.5rem;
-
-  overflow: hidden; /* Основное свойство, которое отключает прокрутку */
-  overflow-x: hidden; /* Специально отключаем горизонтальную прокрутку */
-  overflow-y: auto; /* Вертикальная прокрутка остается, если контент не помещается */
+  overflow: hidden;
+  gap: 1rem;
 }
 
 /* Chess board styles */
@@ -82,7 +83,7 @@
 
 /* Controls */
 .controls-group {
-  min-height: 120px;
+  min-height: 0px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -101,21 +102,8 @@
   gap: 0.5rem;
 }
 
-
-.opening-name-box {
-  padding: 6px 10px;
-  font-size: 15px;  
-  font-weight: 500;
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
-  color: var(--plasma-colors-text-primary, #fff);
-  text-align: center;
-  margin-bottom: 8px; 
-}
-
-
 /* Responsive */
-@media (max-width: 1200px) {
+@media (max-width: 600px) {
   .chess-app-container {
     padding: 20px;
   }
@@ -125,7 +113,7 @@
   }
 }
 
-@media (max-width: 992px) {
+@media (max-width: 600px) {
   .main-grid {
     flex-direction: column;
     align-items: center;
@@ -144,7 +132,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
   .chess-app-container {
     padding: 15px;
   }
@@ -158,3 +146,5 @@
     padding: 10px 14px !important;
   }
 }
+
+

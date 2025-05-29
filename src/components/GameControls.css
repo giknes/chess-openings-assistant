@@ -46,6 +46,12 @@
   flex-direction: column;
   gap: 1rem;
   width: 100%;
+  flex: 0 1 auto;
+  flex-shrink: 0;            
+  flex-grow: 0;             
+  min-height: 0; 
+  max-height: 160px;     
+  overflow: hidden;      
 }
 
 .mode-buttons-row {

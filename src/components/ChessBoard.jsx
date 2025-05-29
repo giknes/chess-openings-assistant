@@ -47,7 +47,6 @@ export default function ChessBoardComponent({
     : openingName
   : '';
 
-
   const handleSquareClick = (square) => {
       if (selectedSquare === null) {
           if (game.get(square) && game.turn() === game.get(square).color) {
@@ -85,6 +84,9 @@ export default function ChessBoardComponent({
       return className;
   };
 
+  const maxBoardHeight = window.innerHeight - 100; // учитываем голосовую строку
+  const boardWidth = Math.min(800, maxBoardHeight);
+
   return (
     <div className="chess-app-container">
       {/* Модальное окно поиска (первое в DOM) */}
@@ -105,7 +107,7 @@ export default function ChessBoardComponent({
             onPieceDrop={onPieceDrop}
             onSquareClick={handleSquareClick}
             squareClassName={getSquareClassName}
-            boardWidth={Math.min(600, window.innerWidth - 350)}
+            boardWidth={boardWidth}
             customBoardStyle={{
               margin: '0 auto' /* Центрируем доску в своей области */
             }}
@@ -117,17 +119,11 @@ export default function ChessBoardComponent({
         </div>
 
         {/* Правая панель (контролы + история) */}
-        <div className="right-panel">
-  <Card style={{ 
-    padding: '1.5rem',
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%',
-    overflow: 'hidden'
-  }}>
+        <div className="right-panel" style={{ height: boardWidth }}>
+  <Card>
     <div className="card-content">
-      {/* Первая строка: Поиск и ориентация */}
-      <div style={{ display: 'flex', gap: '1rem' }}>
+      {/* Кнопки управления */}
+      <div className="controls-row">
         <Button 
           view="primary" 
           size="s" 
@@ -145,11 +141,8 @@ export default function ChessBoardComponent({
           Смена ориентации
         </Button>
       </div>
-
-      {/* Статус игры */}
       <GameStatus game={game} errorMessage={errorMessage} />
 
-      {/* Кнопки режимов */}
       <GameControls
         mode={mode}
         onChangeMode={onChangeMode}
@@ -158,20 +151,17 @@ export default function ChessBoardComponent({
         isGameLoaded={isGameLoaded}
       />
 
-      {displayName && (
-        <div className="opening-name-box">
-          {displayName}
-        </div>
-      )}
+      {displayName && <div className="opening-name">{displayName}</div>}
 
-      {/* История ходов */}
-      {mode !== "practice" && moveHistory.length > 0 && (
-        <MoveHistory
-          moveHistory={moveHistory}
-          currentMoveIndex={currentMoveIndex}
-          goToMove={onMoveSelect}
-        />
-      )}
+      <div className="move-history-wrapper">
+        {mode !== "practice" && moveHistory.length > 0 && (
+          <MoveHistory
+            moveHistory={moveHistory}
+            currentMoveIndex={currentMoveIndex}
+            goToMove={onMoveSelect}
+          />
+        )}
+      </div>
     </div>
   </Card>
 </div>

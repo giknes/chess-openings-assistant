@@ -1,4 +1,9 @@
 .game-status {
+  flex: 0 1 auto;
+  flex-shrink: 0;
+  flex-grow: 0;
+  min-height: 0;
+  max-height: 80px;
   padding: 12px;
   border-radius: 8px;
   font-weight: bold;
@@ -6,4 +11,5 @@
   background: #e3f2fd;
   color: #1976d2;
   border-left: 4px solid #1976d2;
+  overflow: hidden;
 }

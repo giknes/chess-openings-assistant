@@ -1,16 +1,23 @@
 .history-card {
   background: var(--plasma-colors-surface-solid-card);
   border-radius: 12px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  padding: 1rem;
 }
 
 .moves-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 8px;
-  max-height: 300px;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
   padding: 8px;
-  margin: 12px 0;
+  margin-bottom: 12px;
 }
 
 .move-item {
@@ -22,18 +29,22 @@
   text-align: center;
 }
 
-.move-item:hover {
-  background: rgba(var(--plasma-colors-surface-solid03-rgb), 0.3) !important;
-}
-
-.move-item.active {
-  background: rgba(var(--plasma-colors-primary-rgb), 0.3) !important; /* Прозрачность 30% */
-  color: inherit; /* Оставляем обычный цвет текста */
-  border: 1px solid var(--plasma-colors-primary);
-}
-
+/* Ключевые изменения для кнопок навигации */
 .navigation-buttons {
+  width: 100%;
   margin-top: 16px;
+  display: flex !important; /* Переопределяем стили Row */
+}
+
+.nav-col {
+  flex: 1;
+  padding: 0 4px;
+  min-width: 0;
+}
+
+.nav-button {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Полоса прокрутки */
@@ -44,23 +55,4 @@
 .moves-container::-webkit-scrollbar-thumb {
   background: var(--plasma-colors-secondary);
   border-radius: 3px;
-}
-
-.history-card {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 0; /* Критически важно */
-  overflow: hidden;
-}
-
-.moves-container {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 8px;
-  padding: 8px;
-  margin: 12px 0;
 }

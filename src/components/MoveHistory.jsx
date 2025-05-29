@@ -3,11 +3,10 @@ import { Card, Button, Cell, Row, Col } from '@salutejs/plasma-ui';
 import './MoveHistory.css';
 
 function MoveHistory({ moveHistory = [], currentMoveIndex = -1, goToMove = () => {} }) {
-  // Защита от undefined
   if (!Array.isArray(moveHistory)) return null;
 
   return (
-    <Card className="history-card" style={{ padding: '1rem', margin: '1rem 0' }}>
+    <Card className="history-card">
       <Cell header="История ходов" />
       
       <div className="moves-container">
@@ -23,24 +22,24 @@ function MoveHistory({ moveHistory = [], currentMoveIndex = -1, goToMove = () =>
       </div>
 
       <Row className="navigation-buttons">
-        <Col>
+        <Col className="nav-col">
           <Button
             view="secondary"
             size="s"
             onClick={() => goToMove(currentMoveIndex - 1)}
             disabled={currentMoveIndex < 0}
-            stretch
+            className="nav-button"
           >
             ← Назад
           </Button>
         </Col>
-        <Col>
+        <Col className="nav-col">
           <Button
             view="secondary"
             size="s"
             onClick={() => goToMove(currentMoveIndex + 1)}
             disabled={currentMoveIndex >= moveHistory.length - 1}
-            stretch
+            className="nav-button"
           >
             Вперед →
           </Button>
