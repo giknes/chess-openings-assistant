@@ -179,7 +179,7 @@ const resetGame = (pgn, mode, setChessState) => {
 // --- Обработчик выбора дебюта ---
 const handleOpeningSelect = async (opening, setChessState) => {
   try {
-    const API_BASE = 'http://localhost:3000';
+    const API_BASE = process.env.REACT_APP_API_BASE;
     const response = await fetch(`${API_BASE}/api/openings/${opening.id}`);
     const result = await response.json();
     const { pgn } = result.data;

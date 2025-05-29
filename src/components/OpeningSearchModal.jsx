@@ -45,7 +45,7 @@ export default function OpeningSearchModal({
   const loadOpenings = async (search = '') => {
     setIsLoading(true);
     try {
-      const API_BASE = 'http://localhost:3000';
+      const API_BASE = process.env.REACT_APP_API_BASE;
       const response = await fetch(`${API_BASE}/api/openings?search=${encodeURIComponent(search)}`);
       if (!response.ok) {
         throw new Error(`Ошибка загрузки: ${response.status} ${response.statusText}`);
@@ -75,7 +75,7 @@ export default function OpeningSearchModal({
     setIsLoadingVariations(true);
     setVariationSearch('');
     try {
-      const API_BASE = 'http://localhost:3000';
+      const API_BASE = process.env.REACT_APP_API_BASE;
       const response = await fetch(`${API_BASE}/api/openings/${opening.id}`);
       const data = await response.json();
       setVariations(data.data.variations || []);
@@ -88,7 +88,7 @@ export default function OpeningSearchModal({
   };
 
   const loadVariationById = async (openingId, variationId) => {
-    const API_BASE = 'http://localhost:3000';
+    const API_BASE = process.env.REACT_APP_API_BASE;
     const response = await fetch(`${API_BASE}/api/openings/${encodeURIComponent(openingId)}/variations/${variationId}`);
     if (!response.ok) throw new Error('Ошибка загрузки вариации');
     return await response.json();
