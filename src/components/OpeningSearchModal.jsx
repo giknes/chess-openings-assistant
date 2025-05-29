@@ -127,7 +127,10 @@ export default function OpeningSearchModal({
                     content={<Body1>{variation.name}</Body1>}
                     onClick={async () => {
                       const loaded = await loadVariationById(selectedOpening.id, variation.id);
-                      onSelectVariation(loaded);
+                      onSelectVariation({
+                        variation: loaded,
+                        opening: selectedOpening
+                      }); 
                       onClose();
                     }}
                     hoverable

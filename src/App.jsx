@@ -36,6 +36,8 @@ function App() {
     moveHistory: [],
     currentMoveIndex: -1,
     mode: 'learn',
+    selectedOpening: null,    
+    selectedVariation: null,  
     isFlipped: false,
     isSearchOpen: false,
     isGameLoaded: false,
@@ -99,8 +101,8 @@ function App() {
       handleOpeningSelect(opening, setChessState)
   }, []);
 
-  const handleVariationSelection = useCallback((variation) => {
-    handleVariationSelect(variation, setChessState);
+  const handleVariationSelection = useCallback(({ variation, opening }) => {
+    handleVariationSelect(variation, opening, setChessState);
   }, []);
 
   const handleFlipBoard = useCallback(() => {
@@ -141,7 +143,6 @@ function App() {
       flip_board: () => handleFlipBoard(),
       open_openings: () => handleToggleSearch(true),
       close_openings: () => handleToggleSearch(false),
-      select_opening: () => handleOpeningSelection(action.name),
       next_move: () => handleNextMove(),
       prev_move: () => handlePrevMove(),
       make_move: () => handlePieceDrop(action.from, action.to, action.promotion),

@@ -24,7 +24,9 @@ const loadPgnGame = (pgn, mode, setChessState) => {
         currentMoveIndex: -1,
         isGameLoaded: true,
         errorMessage: "",
-        pgn: pgn
+        pgn: pgn,
+        selectedOpening: prevState.selectedOpening || null,
+        selectedVariation: prevState.selectedVariation || null
       };
     } catch (e) {
       console.error("Ошибка при загрузке PGN:", e);
@@ -157,31 +159,21 @@ const handleOnDrop = (sourceSquare, targetSquare, piece, mode, setChessState, ga
 
 
 // --- Сброс игры (в начальную позицию или загрузка PGN) ---
-const resetGame = (explicitPgn, mode, setChessState) => {
-  setChessState(prevState => {
-    const fallbackPgn =
-      explicitPgn || 
-      prevState.selectedVariation?.pgn || 
-      prevState.selectedOpening?.pgn || '';
-
-    if (fallbackPgn && mode !== "free") {
-      // загрузи снова как при старте
-      loadPgnGame(fallbackPgn, mode, setChessState);
-    } else if (mode === "free") {
-      const chess = new Chess();
-
-      return {
-        ...prevState,
-        game: chess,
-        moveHistory: chess.history(),
-        currentMoveIndex: -1,
-        isGameLoaded: true,
-        errorMessage: ""
-      };
-    }
-
-    return prevState; // ничего не делаем, если PGN пустой
-  });
+const resetGame = (pgn, mode, setChessState) => {
+  if (pgn && mode !== "free") {
+    loadPgnGame(pgn, mode, setChessState);
+  } else {
+    setChessState(prevState => ({  
+      ...prevState,
+      game: new Chess(),
+      moveHistory: [],
+      currentMoveIndex: -1,
+      isGameLoaded: true,
+      errorMessage: "",
+      selectedSquare: null,
+      possibleMoves: []
+    }));
+  }
 };
 
 // --- Обработчик выбора дебюта ---
@@ -204,7 +196,9 @@ const handleOpeningSelect = async (opening, setChessState) => {
         isGameLoaded: true,
         errorMessage: "",
         isSearchOpen: false,
-        pgn: pgn
+        pgn: pgn,
+        selectedOpening: opening,           
+        selectedVariation: null  
       };
     });
   } catch (error) {
@@ -216,7 +210,7 @@ const handleOpeningSelect = async (opening, setChessState) => {
   }
 };
 
-const handleVariationSelect = (variation, setChessState) => {
+const handleVariationSelect = (variation, opening, setChessState) => {
   try {
     setChessState(prevState => {
       const chess = new Chess();
@@ -231,6 +225,8 @@ const handleVariationSelect = (variation, setChessState) => {
         errorMessage: "",
         isSearchOpen: false,
         pgn: variation.pgn,
+        selectedOpening: opening, 
+        selectedVariation: variation
       };
     });
   } catch (error) {

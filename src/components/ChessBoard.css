@@ -101,6 +101,19 @@
   gap: 0.5rem;
 }
 
+
+.opening-name-box {
+  padding: 6px 10px;
+  font-size: 15px;  
+  font-weight: 500;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  color: var(--plasma-colors-text-primary, #fff);
+  text-align: center;
+  margin-bottom: 8px; 
+}
+
+
 /* Responsive */
 @media (max-width: 1200px) {
   .chess-app-container {

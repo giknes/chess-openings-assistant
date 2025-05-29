@@ -38,6 +38,15 @@ export default function ChessBoardComponent({
   const [selectedSquare, setSelectedSquare] = useState(null);
   const [possibleMoves, setPossibleMoves] = useState([]);
 
+  const openingName = chessState.selectedOpening?.name || '';
+  const variationName = chessState.selectedVariation?.name || '';
+
+  const displayName = openingName
+  ? variationName
+    ? `${openingName} — ${variationName}`
+    : openingName
+  : '';
+
 
   const handleSquareClick = (square) => {
       if (selectedSquare === null) {
@@ -148,6 +157,12 @@ export default function ChessBoardComponent({
         hasPgn={!!pgn}
         isGameLoaded={isGameLoaded}
       />
+
+      {displayName && (
+        <div className="opening-name-box">
+          {displayName}
+        </div>
+      )}
 
       {/* История ходов */}
       {mode !== "practice" && moveHistory.length > 0 && (
