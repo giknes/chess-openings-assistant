@@ -1,4 +1,4 @@
-import { Button, Cell } from '@salutejs/plasma-ui';
+import { Button} from '@salutejs/plasma-ui';
 import './GameControls.css';
 
 export default function GameControls({

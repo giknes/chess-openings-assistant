@@ -19,6 +19,7 @@ export default function ChessBoardComponent({
   onFlipBoard,
   onToggleSearch,
   onSelectOpening,
+  onSelectVariation,
   onReset
 }) {
 
@@ -82,6 +83,7 @@ export default function ChessBoardComponent({
         isOpen={isSearchOpen}
         onClose={() => onToggleSearch(false)} // Используем prop
         onSelectOpening={onSelectOpening}
+        onSelectVariation={onSelectVariation}
       />
 
       {/* Основная сетка */}

@@ -1,3 +1,4 @@
+/* Фон модального окна */
 .search-modal {
   position: fixed;
   top: 0;
@@ -12,6 +13,7 @@
   padding: 16px;
 }
 
+/* Контейнер модального содержимого */
 .search-modal-content {
   width: 100%;
   max-width: 500px;
@@ -19,8 +21,14 @@
   overflow-y: auto;
   padding: 1.5rem;
   border-radius: 12px;
+  background-color: var(--plasma-colors-surface-card);
+  color: var(--plasma-colors-text-primary);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  transition: background-color 0.3s ease;
 }
 
+/* Список дебютов */
 .openings-list {
   display: flex;
   flex-direction: column;
@@ -31,8 +39,46 @@
   padding: 4px;
 }
 
-/* Стили для поля ввода */
+/* Список вариаций */
+.variations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+/* Элемент вариации */
+.variation-cell {
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 12px 14px;
+  background-color: var(--plasma-colors-surface-default);
+  color: var(--plasma-colors-text-primary);
+  font-size: 1rem;
+  transition: background 0.2s ease;
+  backdrop-filter: blur(2px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.variation-cell:hover {
+  background-color: var(--plasma-colors-surface-hover);
+}
+
+/* Основной вариант */
+.main-variation-cell {
+  background-color: var(--plasma-colors-surface-hover);
+  font-weight: 500;
+}
+
+.main-variation-cell:hover {
+  background-color: var(--plasma-colors-surface-card);
+}
+
+/* Текстовое поле поиска */
 .plasma-ui__text-box {
   font-size: 1rem;
   padding: 12px;
+  background-color: var(--plasma-colors-surface-default);
+  color: var(--plasma-colors-text-primary);
+  border-radius: 8px;
 }

@@ -9,6 +9,7 @@ import {
   handleOnDrop,
   resetGame,
   handleOpeningSelect,
+  handleVariationSelect,
   handleCastling
 } from './components/ChessLogic';
 import ChessBoardComponent from './components/ChessBoard';
@@ -98,6 +99,10 @@ function App() {
       handleOpeningSelect(opening, setChessState)
   }, []);
 
+  const handleVariationSelection = useCallback((variation) => {
+    handleVariationSelect(variation, setChessState);
+  }, []);
+
   const handleFlipBoard = useCallback(() => {
       setChessState(prevState => ({
           ...prevState,
@@ -164,6 +169,7 @@ function App() {
       onFlipBoard={handleFlipBoard}
       onToggleSearch={handleToggleSearch}
       onSelectOpening={handleOpeningSelection}
+      onSelectVariation={handleVariationSelection}
       onReset={handleResetGame}
     />
   );

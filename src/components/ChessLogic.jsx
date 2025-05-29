@@ -204,6 +204,31 @@ const handleOpeningSelect = async (opening, setChessState) => {
   }
 };
 
+const handleVariationSelect = (variation, setChessState) => {
+  try {
+    setChessState(prevState => {
+      const chess = new Chess();
+      chess.loadPgn(variation.pgn);
+      const newGame = new Chess();
+      return {
+        ...prevState,
+        game: newGame,
+        moveHistory: chess.history(),
+        currentMoveIndex: -1,
+        isGameLoaded: true,
+        errorMessage: "",
+        isSearchOpen: false
+      };
+    });
+  } catch (error) {
+    console.error("Ошибка загрузки вариации:", error);
+    setChessState(prevState => ({
+      ...prevState,
+      errorMessage: "Ошибка загрузки вариации"
+    }));
+  }
+};
+
 function announceGameState(game, speak) {
   if (game.isCheckmate()) {
     speak("Мат! Игра окончена");
@@ -256,5 +281,6 @@ export {
   handleOnDrop,
   resetGame,
   handleOpeningSelect,
+  handleVariationSelect,
   handleCastling
 };
