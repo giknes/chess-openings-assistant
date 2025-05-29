@@ -11,7 +11,7 @@ module.exports = {
   
   FIRESTORE_COLLECTIONS: {
     OPENINGS: 'Openings'
-    // VARIATIONS больше не нужна, если храним в основном документе
+    VARIATIONS: 'variations'
   },
   
   ERROR_MESSAGES: {
