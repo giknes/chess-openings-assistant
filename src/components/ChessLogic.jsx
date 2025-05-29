@@ -23,7 +23,8 @@ const loadPgnGame = (pgn, mode, setChessState) => {
         moveHistory: chess.history(), 
         currentMoveIndex: -1,
         isGameLoaded: true,
-        errorMessage: ""
+        errorMessage: "",
+        pgn: pgn
       };
     } catch (e) {
       console.error("Ошибка при загрузке PGN:", e);
@@ -156,21 +157,31 @@ const handleOnDrop = (sourceSquare, targetSquare, piece, mode, setChessState, ga
 
 
 // --- Сброс игры (в начальную позицию или загрузка PGN) ---
-const resetGame = (pgn, mode, setChessState) => {
-  if (pgn && mode !== "free") {
-    loadPgnGame(pgn, mode, setChessState);
-  } else {
-    setChessState(prevState => ({  
-      ...prevState,
-      game: new Chess(),
-      moveHistory: [],
-      currentMoveIndex: -1,
-      isGameLoaded: true,
-      errorMessage: "",
-      selectedSquare: null,
-      possibleMoves: []
-    }));
-  }
+const resetGame = (explicitPgn, mode, setChessState) => {
+  setChessState(prevState => {
+    const fallbackPgn =
+      explicitPgn || 
+      prevState.selectedVariation?.pgn || 
+      prevState.selectedOpening?.pgn || '';
+
+    if (fallbackPgn && mode !== "free") {
+      // загрузи снова как при старте
+      loadPgnGame(fallbackPgn, mode, setChessState);
+    } else if (mode === "free") {
+      const chess = new Chess();
+
+      return {
+        ...prevState,
+        game: chess,
+        moveHistory: chess.history(),
+        currentMoveIndex: -1,
+        isGameLoaded: true,
+        errorMessage: ""
+      };
+    }
+
+    return prevState; // ничего не делаем, если PGN пустой
+  });
 };
 
 // --- Обработчик выбора дебюта ---
@@ -192,7 +203,8 @@ const handleOpeningSelect = async (opening, setChessState) => {
         currentMoveIndex: -1,
         isGameLoaded: true,
         errorMessage: "",
-        isSearchOpen: false
+        isSearchOpen: false,
+        pgn: pgn
       };
     });
   } catch (error) {
@@ -217,7 +229,8 @@ const handleVariationSelect = (variation, setChessState) => {
         currentMoveIndex: -1,
         isGameLoaded: true,
         errorMessage: "",
-        isSearchOpen: false
+        isSearchOpen: false,
+        pgn: variation.pgn,
       };
     });
   } catch (error) {
