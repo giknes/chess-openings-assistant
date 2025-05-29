@@ -5,6 +5,7 @@ const openingsController = require('../controllers/openingsController');
 
 router.get('/', openingsController.getAllOpenings);
 router.get('/:id', openingsController.getOpeningById);
+router.get('/:openingId/variations/:variationId', openingsController.getVariationById);
 router.post('/:id/popularity', openingsController.incrementPopularity);
 
 module.exports = router;
