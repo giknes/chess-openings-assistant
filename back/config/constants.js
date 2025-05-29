@@ -10,7 +10,7 @@ module.exports = {
   },
   
   FIRESTORE_COLLECTIONS: {
-    OPENINGS: 'Openings'
+    OPENINGS: 'Openings',
     VARIATIONS: 'variations'
   },
   
