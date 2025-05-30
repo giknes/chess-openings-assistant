@@ -1,0 +1,58 @@
+.history-card {
+  background: var(--plasma-colors-surface-solid-card);
+  border-radius: 12px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  padding: 1rem;
+}
+
+.moves-container {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  padding: 8px;
+  margin-bottom: 12px;
+}
+
+.move-item {
+  padding: 8px 12px;
+  background: var(--plasma-colors-surface-solid02);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+/* Ключевые изменения для кнопок навигации */
+.navigation-buttons {
+  width: 100%;
+  margin-top: 16px;
+  display: flex !important; /* Переопределяем стили Row */
+}
+
+.nav-col {
+  flex: 1;
+  padding: 0 4px;
+  min-width: 0;
+}
+
+.nav-button {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Полоса прокрутки */
+.moves-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.moves-container::-webkit-scrollbar-thumb {
+  background: var(--plasma-colors-secondary);
+  border-radius: 3px;
+}

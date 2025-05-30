@@ -1,0 +1,78 @@
+
+
+/* Кнопка поиска */
+.search-button {
+  padding: 12px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.search-button:hover {
+  background: #3e8e41;
+}
+
+.mode-buttons-container {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.mode-button {
+  flex: 1;
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 600px) {
+  .mode-buttons-container {
+    flex-direction: column;
+  }
+  
+  .mode-button {
+    width: 100%;
+  }
+}
+
+.game-controls-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  flex: 0 1 auto;
+  flex-shrink: 0;            
+  flex-grow: 0;             
+  min-height: 0; 
+  max-height: 160px;     
+  overflow: hidden;      
+}
+
+.mode-buttons-row {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.mode-button {
+  flex: 1; /* Равномерное распределение */
+  min-width: 0; /* Фикс для переполнения текста */
+}
+
+.reset-button {
+  width: 100%;
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 600px) {
+  .mode-buttons-row {
+    flex-direction: column;
+  }
+}
+

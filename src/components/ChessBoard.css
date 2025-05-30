@@ -1,0 +1,150 @@
+.chess-app-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: calc(100vh - 60px);
+}
+
+.main-grid {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 1400px;
+}
+
+.controls-row {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.chessboard-area {
+  flex: 0.8;
+  display: flex;
+  justify-content: flex-start; 
+  align-items: center;
+  height: 100%;
+  max-height: calc(100vh - 120px);
+}
+
+.right-panel {
+  flex: 1;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  min-height: 0;
+  max-height: 800px;
+  overflow: hidden; /* Основное свойство, которое отключает прокрутку */
+  overflow-x: hidden; /* Специально отключаем горизонтальную прокрутку */
+  overflow-y: auto;
+}
+
+.right-panel > .card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 1.5rem;
+  overflow: hidden;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  gap: 1rem;
+}
+
+/* Chess board styles */
+.square {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+}
+
+.selected {
+  background-color: rgba(255, 255, 0, 0.2) !important;
+}
+
+.possible {
+  background-color: rgba(0, 255, 0, 0.1) !important;
+  cursor: pointer;
+}
+
+/* Controls */
+.controls-group {
+  min-height: 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Buttons */
+.plasma-ui__button {
+  display: inline-flex !important;
+  height: auto !important;
+  min-height: 48px;
+  padding: 12px 16px !important;
+}
+
+.plasma-ui__button-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .chess-app-container {
+    padding: 20px;
+  }
+  
+  .main-grid {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .main-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .right-panel {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    max-height: none;
+  }
+  
+  .chessboard-area {
+    width: 100%;
+    min-width: unset;
+  }
+}
+
+@media (max-width: 600px) {
+  .chess-app-container {
+    padding: 15px;
+  }
+  
+  .right-panel > .card {
+    padding: 1rem;
+  }
+  
+  .plasma-ui__button {
+    min-height: 42px;
+    padding: 10px 14px !important;
+  }
+}
+
+
