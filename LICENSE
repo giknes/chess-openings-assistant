@@ -19,3 +19,48 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+This project includes the following third-party libraries and components:
+
+• chess.js — MIT License  
+  https://github.com/jhlywa/chess.js
+
+• react-chessboard — MIT License  
+  https://github.com/Clariity/react-chessboard
+
+• React — MIT License  
+  https://reactjs.org
+
+• react-dom — MIT License  
+  https://reactjs.org
+
+• styled-components — MIT License  
+  https://styled-components.com
+
+• @salutejs/client — Apache License 2.0  
+  https://github.com/salute-developers/plasma
+
+• @salutejs/plasma-ui — MIT License  
+  https://github.com/salute-developers/plasma
+
+• @salutejs/plasma-tokens — MIT License  
+  https://github.com/salute-developers/plasma
+
+• @salutejs/plasma-icons — MIT License  
+  https://github.com/salute-developers/plasma
+
+• @salutejs/plasma-web — MIT License  
+  https://github.com/salute-developers/plasma
+
+• @testing-library/* — MIT License  
+  https://github.com/testing-library
+
+• typescript — Apache License 2.0  
+  https://github.com/microsoft/TypeScript
+
+• react-scripts — MIT License  
+  https://github.com/facebook/create-react-app
+
+Each library is subject to its respective license, as listed above.

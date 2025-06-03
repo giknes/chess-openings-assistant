@@ -84,7 +84,7 @@ export default function ChessBoardComponent({
       return className;
   };
 
-  const maxBoardHeight = window.innerHeight - 100; // учитываем голосовую строку
+  const maxBoardHeight = Math.min(window.innerHeight - 100, window.innerWidth - 50); // учитываем голосовую строку
   const boardWidth = Math.min(800, maxBoardHeight);
 
   return (
