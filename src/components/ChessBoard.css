@@ -41,8 +41,8 @@
   height: auto;
   min-height: 0;
   max-height: 800px;
-  overflow: hidden; /* Основное свойство, которое отключает прокрутку */
-  overflow-x: hidden; /* Специально отключаем горизонтальную прокрутку */
+  overflow: hidden; 
+  overflow-x: hidden; 
   overflow-y: auto;
 }
 
