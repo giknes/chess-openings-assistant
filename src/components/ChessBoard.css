@@ -163,6 +163,7 @@
   .chessboard-area {
     width: 100%;
     justify-content: center;
+    margin-top: 3%;
   }
 
   .right-panel > .card {

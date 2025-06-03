@@ -84,8 +84,8 @@ export default function ChessBoardComponent({
       return className;
   };
 
-  const maxBoardHeight = Math.min(window.innerHeight - 100, window.innerWidth - 50); // учитываем голосовую строку
-  const boardWidth = Math.min(800, maxBoardHeight);
+  const maxBoardHeight = Math.min(window.innerHeight * 0.75, window.innerWidth * 0.85); // учитываем голосовую строку
+  const boardWidth = Math.min(1400, maxBoardHeight);
 
   return (
     <div className="chess-app-container">
@@ -111,8 +111,8 @@ export default function ChessBoardComponent({
             customBoardStyle={{
               margin: '0 auto' /* Центрируем доску в своей области */
             }}
-            customDarkSquareStyle={{ backgroundColor: "#b58863" }}
-            customLightSquareStyle={{ backgroundColor: "#f0d9b5" }}
+            customDarkSquareStyle={{ backgroundColor: "	#eeeed2" }}
+            customLightSquareStyle={{ backgroundColor: "#769656" }}
             
             animationDuration={0}
           />
