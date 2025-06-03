@@ -80,7 +80,7 @@ export default function OpeningSearchModal({
       const data = await response.json();
       setVariations(data.data.variations || []);
     } catch (e) {
-      console.error('Ошибка загрузки вариаций:', e);
+      console.error('Ошибка загрузки вариантов:', e);
       setVariations([]);
     } finally {
       setIsLoadingVariations(false);
@@ -90,7 +90,7 @@ export default function OpeningSearchModal({
   const loadVariationById = async (openingId, variationId) => {
     const API_BASE = process.env.REACT_APP_API_BASE;
     const response = await fetch(`${API_BASE}/api/openings/${encodeURIComponent(openingId)}/variations/${variationId}`);
-    if (!response.ok) throw new Error('Ошибка загрузки вариации');
+    if (!response.ok) throw new Error('Ошибка загрузки вариантов');
     return await response.json();
   };
 
@@ -110,7 +110,7 @@ export default function OpeningSearchModal({
         <TextField
           value={variationSearch}
           onChange={(e) => setVariationSearch(e.target.value)}
-          placeholder="Поиск вариации"
+          placeholder="Поиск вариантов"
           style={{ marginBottom: '12px' }}
         />
 
@@ -148,7 +148,7 @@ export default function OpeningSearchModal({
               </>
             ) : (
               <Body1 style={{ color: 'gray' }}>
-                Вариации не найдены. Используется основной дебют.
+                Варианты не найдены. Используется основной дебют.
               </Body1>
             )}
           </>
