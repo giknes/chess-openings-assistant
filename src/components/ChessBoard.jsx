@@ -5,6 +5,7 @@ import GameControls from './GameControls';
 import GameStatus from './GameStatus';
 import MoveHistory from "./MoveHistory";
 import './ChessBoard.css';
+import HelpModal from './HelpModal';
 
 import { 
   Button,
@@ -18,6 +19,7 @@ export default function ChessBoardComponent({
   onChangeMode,
   onFlipBoard,
   onToggleSearch,
+  onHelpOpen,
   onSelectOpening,
   onSelectVariation,
   onReset
@@ -31,6 +33,7 @@ export default function ChessBoardComponent({
       isFlipped,
       isSearchOpen,
       isGameLoaded,
+      isHelpOpen,
       errorMessage,
       pgn
   } = chessState;
@@ -73,15 +76,25 @@ export default function ChessBoardComponent({
       }
   };
 
-  const getSquareClassName = (square) => {
-      let className = '';
-      if (selectedSquare === square) {
-          className += 'selected ';  
-      }
-      if (possibleMoves.some(move => move.to === square)) {
-          className += 'possible ';   
-      }
-      return className;
+  const customSquareStyles = {};
+  if (selectedSquare) {
+    customSquareStyles[selectedSquare] = {
+      background: 'rgba(255, 255, 0, 0.6)',
+      boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.5)'
+    };
+  }
+  possibleMoves.forEach(move => {
+    customSquareStyles[move.to] = {
+      background: 'rgba(0, 255, 0, 0.3)',
+      boxShadow: 'inset 0 0 5px rgba(0, 0, 0, 0.3)',
+      cursor: 'pointer'
+    };
+  });
+
+  const handlePieceDrop = (sourceSquare, targetSquare, piece) => {
+    onPieceDrop(sourceSquare, targetSquare, piece);
+    setSelectedSquare(null);
+    setPossibleMoves([]);
   };
 
   const maxBoardHeight = Math.min(window.innerHeight * 0.75, window.innerWidth * 0.85); // учитываем голосовую строку
@@ -97,6 +110,11 @@ export default function ChessBoardComponent({
         onSelectVariation={onSelectVariation}
       />
 
+      <HelpModal
+        isOpen={isHelpOpen}
+        onClose={() => onHelpOpen(false)}
+      />
+
       {/* Основная сетка */}
       <div className="main-grid">
         {/* Шахматная доска */}
@@ -104,9 +122,14 @@ export default function ChessBoardComponent({
           <Chessboard
             position={game.fen()}
             boardOrientation={isFlipped ? 'black' : 'white'}
-            onPieceDrop={onPieceDrop}
+            onPieceDrop={handlePieceDrop}
+            onPieceDragBegin={(piece, sourceSquare) => {
+              const moves = game.moves({ square: sourceSquare, verbose: true });
+              setSelectedSquare(sourceSquare);
+              setPossibleMoves(moves);
+            }}
             onSquareClick={handleSquareClick}
-            squareClassName={getSquareClassName}
+            customSquareStyles={customSquareStyles}
             boardWidth={boardWidth}
             customBoardStyle={{
               margin: '0 auto' /* Центрируем доску в своей области */
@@ -139,6 +162,14 @@ export default function ChessBoardComponent({
           style={{ flex: 1 }}
         >
           Смена ориентации
+        </Button>
+        <Button 
+          view="secondary"
+          size="s"
+          onClick={() => onHelpOpen(true)}
+          style={{ flex: 1 }}
+        >
+          Помощь
         </Button>
       </div>
       <GameStatus game={game} errorMessage={errorMessage} />

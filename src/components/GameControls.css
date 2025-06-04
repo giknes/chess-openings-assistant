@@ -34,7 +34,7 @@
 @media (max-width: 600px) {
   .mode-buttons-container {
     flex-direction: column;
-  }
+}
   
   .mode-button {
     width: 100%;
@@ -67,6 +67,58 @@
 
 .reset-button {
   width: 100%;
+}
+
+.game-controls-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.mode-buttons-row {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.mode-button, .reset-button {
+  flex: 1;
+  min-height: 48px;
+  padding: 12px 16px;
+  overflow: visible;
+}
+
+.plasma-ui__button {
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+  box-shadow: none !important;
+}
+
+.plasma-ui__button:focus {
+  box-shadow: 0 0 0 2px var(--plasma-colors-button-focused) !important;
+}
+
+.reset-button {
+  padding: 12px 24px; /* Увеличиваем горизонтальный padding */
+  margin: 0 0px; /* Добавляем отступы по бокам */
+  box-sizing: border-box;
+}
+
+.reset-button {
+  padding-left: 16px;
+  padding-right: 16px;
+  
+  margin-left: 8px;
+  margin-right: 8px;
+
+  box-sizing: border-box;
+  
+  max-width: calc(100% - 16px); 
+  width: auto;
 }
 
 /* Адаптация для мобильных */
