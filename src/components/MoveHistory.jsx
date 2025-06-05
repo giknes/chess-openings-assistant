@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, Button, Cell, Row, Col } from '@salutejs/plasma-ui';
+import { SECTION_ITEM_CLASS_NAME } from '@salutejs/spatial';
 import './MoveHistory.css';
 
 function MoveHistory({ moveHistory = [], currentMoveIndex = -1, goToMove = () => {} }) {
@@ -13,8 +14,14 @@ function MoveHistory({ moveHistory = [], currentMoveIndex = -1, goToMove = () =>
         {moveHistory.map((move, index) => (
           <div
             key={`${index}-${move}`}
-            className={`move-item ${index === currentMoveIndex ? 'active' : ''}`}
+            tabIndex={0}
+            className={`move-item ${index === currentMoveIndex ? 'active' : ''} ${SECTION_ITEM_CLASS_NAME}`}
             onClick={() => goToMove(index)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                goToMove(index);
+              }
+            }}
           >
             {index % 2 === 0 ? `${Math.floor(index/2) + 1}.` : ''} {move}
           </div>
@@ -26,9 +33,10 @@ function MoveHistory({ moveHistory = [], currentMoveIndex = -1, goToMove = () =>
           <Button
             view="secondary"
             size="s"
+            tabIndex={0}
+            className={`nav-button ${SECTION_ITEM_CLASS_NAME}`}
             onClick={() => goToMove(currentMoveIndex - 1)}
             disabled={currentMoveIndex < 0}
-            className="nav-button"
           >
             ← Назад
           </Button>
@@ -37,9 +45,10 @@ function MoveHistory({ moveHistory = [], currentMoveIndex = -1, goToMove = () =>
           <Button
             view="secondary"
             size="s"
+            tabIndex={0}
+            className={`nav-button ${SECTION_ITEM_CLASS_NAME}`}
             onClick={() => goToMove(currentMoveIndex + 1)}
             disabled={currentMoveIndex >= moveHistory.length - 1}
-            className="nav-button"
           >
             Вперед →
           </Button>

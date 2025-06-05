@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback,useRef } from 'react';
 import { Chess } from 'chess.js';
 import { createAssistant, createSmartappDebugger } from '@salutejs/client';
+import { spatnavInstance } from '@salutejs/spatial';
 
 import './App.css';
 import {
@@ -47,6 +48,9 @@ function App() {
   });
 
   const dispatchRef = useRef();
+  useEffect(() => {
+    spatnavInstance.init(); 
+}, []);
 
   const getStateForAssistant = useCallback(() => ({
   }), []);
@@ -73,26 +77,6 @@ function App() {
 
     newAssistant.on('tts', (event) => {
       console.log(`assistant.on(tts)`, event);
-    });
-
-    window.addEventListener('keydown', (event) => {
-      switch(event.code) {
-        case 'ArrowDown':
-          // вниз
-          break;
-          case 'ArrowUp':
-          // вверх
-          break;
-          case 'ArrowLeft':
-          // влево
-          break;
-          case 'ArrowRight':
-          // вправо
-          break;
-          case 'Enter':
-          // ок
-          break;
-      }
     });
 
     setAssistant(newAssistant);

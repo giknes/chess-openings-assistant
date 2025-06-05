@@ -1,18 +1,15 @@
-import { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Chessboard } from "react-chessboard";
+import { Button, Card } from '@salutejs/plasma-ui';
+import { useSection, SECTION_ITEM_CLASS_NAME, setDefaultSectionByName } from '@salutejs/spatial';
 import OpeningSearchModal from './OpeningSearchModal';
-import GameControls from './GameControls';
+import HelpModal from './HelpModal';
 import GameStatus from './GameStatus';
+import GameControls from './GameControls';
 import MoveHistory from "./MoveHistory";
 import './ChessBoard.css';
-import HelpModal from './HelpModal';
 
-import { 
-  Button,
-  Card,
-} from '@salutejs/plasma-ui';
-
-export default function ChessBoardComponent({
+const ChessBoardComponent = ({
   chessState,
   onPieceDrop,
   onMoveSelect,
@@ -23,57 +20,145 @@ export default function ChessBoardComponent({
   onSelectOpening,
   onSelectVariation,
   onReset
-}) {
-
+}) => {
   const {
-      game,
-      moveHistory,
-      currentMoveIndex,
-      mode,
-      isFlipped,
-      isSearchOpen,
-      isGameLoaded,
-      isHelpOpen,
-      errorMessage,
-      pgn
+    game,
+    moveHistory,
+    currentMoveIndex,
+    mode,
+    isFlipped,
+    isSearchOpen,
+    isGameLoaded,
+    isHelpOpen,
+    errorMessage,
+    pgn,
+    selectedOpening,
+    selectedVariation
   } = chessState;
 
   const [selectedSquare, setSelectedSquare] = useState(null);
   const [possibleMoves, setPossibleMoves] = useState([]);
+  const [focusedSquare, setFocusedSquare] = useState(null);
+  const [activeSection, setActiveSection] = useState('panel');
 
-  const openingName = chessState.selectedOpening?.name || '';
-  const variationName = chessState.selectedVariation?.name || '';
+  // Создаем DOM-элементы для секций
+  const panelElement = useRef(document.createElement('div'));
+  const boardElement = useRef(document.createElement('div'));
+  const panelContainerRef = useRef(null);
+  const boardContainerRef = useRef(null);
 
-  const displayName = openingName
-  ? variationName
-    ? `${openingName} — ${variationName}`
-    : openingName
-  : '';
+  // Инициализация элементов
+  useEffect(() => {
+    panelElement.current.id = 'panel';
+    boardElement.current.id = 'chessboard';
+
+    if (panelContainerRef.current) {
+      panelContainerRef.current.appendChild(panelElement.current);
+    }
+    if (boardContainerRef.current) {
+      boardContainerRef.current.appendChild(boardElement.current);
+    }
+
+    return () => {
+      if (panelElement.current.parentNode) {
+        panelElement.current.parentNode.removeChild(panelElement.current);
+      }
+      if (boardElement.current.parentNode) {
+        boardElement.current.parentNode.removeChild(boardElement.current);
+      }
+    };
+  }, []);
+
+  // Регистрация секции панели управления
+  useSection('panel', {
+    getRootElement: () => document.getElementById('panel'),
+    onNavigate: (direction) => {
+      if (direction === 'down') {
+        setActiveSection('chessboard');
+        setFocusedSquare('e4');
+        return true;
+      }
+      return false;
+    }
+  });
+
+  // Регистрация секции шахматной доски
+  useSection('chessboard', {
+    getRootElement: () => document.getElementById('chessboard'),
+    onNavigate: (direction) => {
+      if (!focusedSquare) {
+        setFocusedSquare('e4');
+        return true;
+      }
+
+      const [file, rank] = focusedSquare.split('');
+      let newFile = file;
+      let newRank = rank;
+
+      switch(direction) {
+        case 'up': 
+          newRank = Math.min(8, parseInt(rank) + 1).toString();
+          break;
+        case 'down': 
+          newRank = Math.max(1, parseInt(rank) - 1).toString();
+          if (newRank === '1') {
+            setActiveSection('panel');
+            return true;
+          }
+          break;
+        case 'left': 
+          newFile = String.fromCharCode(Math.max(97, file.charCodeAt(0) - 1));
+          break;
+        case 'right': 
+          newFile = String.fromCharCode(Math.min(104, file.charCodeAt(0) + 1));
+          break;
+      }
+
+      setFocusedSquare(newFile + newRank);
+      return true;
+    },
+    onItemActivate: () => {
+      if (focusedSquare) {
+        handleSquareClick(focusedSquare);
+      }
+    }
+  });
+
+  // Инициализация навигации
+  useEffect(() => {
+    setDefaultSectionByName('panel');
+  }, []);
 
   const handleSquareClick = (square) => {
-      if (selectedSquare === null) {
-          if (game.get(square) && game.turn() === game.get(square).color) {
-              const moves = game.moves({ square: square, verbose: true });
-              setSelectedSquare(square);
-              setPossibleMoves(moves);
-          }
-      } else {
-          const move = possibleMoves.find((m) => m.to === square);
-          if (move) {
-              onPieceDrop(selectedSquare, square, move.piece); 
-              setSelectedSquare(null);
-              setPossibleMoves([]);
-          } else {
-              if (game.get(square) && game.turn() === game.get(square).color) {
-                  const moves = game.moves({ square: square, verbose: true });
-                  setSelectedSquare(square);
-                  setPossibleMoves(moves);
-              } else {
-                  setSelectedSquare(null);
-                  setPossibleMoves([]);
-              }
-          }
+    if (selectedSquare === null) {
+      if (game.get(square) && game.turn() === game.get(square).color) {
+        const moves = game.moves({ square: square, verbose: true });
+        setSelectedSquare(square);
+        setPossibleMoves(moves);
       }
+    } else {
+      const move = possibleMoves.find((m) => m.to === square);
+      if (move) {
+        onPieceDrop(selectedSquare, square, move.piece);
+        setSelectedSquare(null);
+        setPossibleMoves([]);
+      } else {
+        if (game.get(square) && game.turn() === game.get(square).color) {
+          const moves = game.moves({ square: square, verbose: true });
+          setSelectedSquare(square);
+          setPossibleMoves(moves);
+        } else {
+          setSelectedSquare(null);
+          setPossibleMoves([]);
+        }
+      }
+    }
+  };
+
+  const handlePieceDrop = (sourceSquare, targetSquare, piece) => {
+    onPieceDrop(sourceSquare, targetSquare, piece);
+    setSelectedSquare(null);
+    setPossibleMoves([]);
   };
 
   const customSquareStyles = {};
@@ -83,6 +168,7 @@ export default function ChessBoardComponent({
       boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.5)'
     };
   }
+  
   possibleMoves.forEach(move => {
     customSquareStyles[move.to] = {
       background: 'rgba(0, 255, 0, 0.3)',
@@ -91,21 +177,30 @@ export default function ChessBoardComponent({
     };
   });
 
-  const handlePieceDrop = (sourceSquare, targetSquare, piece) => {
-    onPieceDrop(sourceSquare, targetSquare, piece);
-    setSelectedSquare(null);
-    setPossibleMoves([]);
-  };
+  const customSquareProps = (square) => ({
+    tabIndex: -1,
+    className: `${SECTION_ITEM_CLASS_NAME} ${
+      square === focusedSquare && activeSection === 'chessboard' ? 'focused-square' : ''
+    }`,
+  });
 
-  const maxBoardHeight = Math.min(window.innerHeight * 0.75, window.innerWidth * 0.85); // учитываем голосовую строку
+  const maxBoardHeight = Math.min(window.innerHeight * 0.75, window.innerWidth * 0.85);
   const boardWidth = Math.min(1400, maxBoardHeight);
+
+  const openingName = selectedOpening?.name || '';
+  const variationName = selectedVariation?.name || '';
+
+  const displayName = openingName
+    ? variationName
+      ? `${openingName} — ${variationName}`
+      : openingName
+    : '';
 
   return (
     <div className="chess-app-container">
-      {/* Модальное окно поиска (первое в DOM) */}
       <OpeningSearchModal
         isOpen={isSearchOpen}
-        onClose={() => onToggleSearch(false)} // Используем prop
+        onClose={() => onToggleSearch(false)}
         onSelectOpening={onSelectOpening}
         onSelectVariation={onSelectVariation}
       />
@@ -115,10 +210,12 @@ export default function ChessBoardComponent({
         onClose={() => onHelpOpen(false)}
       />
 
-      {/* Основная сетка */}
       <div className="main-grid">
-        {/* Шахматная доска */}
-        <div className="chessboard-area">
+        <div 
+          ref={boardContainerRef}
+          className="chessboard-area"
+          id="chessboard-container"
+        >
           <Chessboard
             position={game.fen()}
             boardOrientation={isFlipped ? 'black' : 'white'}
@@ -131,72 +228,82 @@ export default function ChessBoardComponent({
             onSquareClick={handleSquareClick}
             customSquareStyles={customSquareStyles}
             boardWidth={boardWidth}
-            customBoardStyle={{
-              margin: '0 auto' /* Центрируем доску в своей области */
-            }}
-            customDarkSquareStyle={{ backgroundColor: "	#eeeed2" }}
+            customBoardStyle={{ margin: '0 auto' }}
+            customDarkSquareStyle={{ backgroundColor: "#eeeed2" }}
             customLightSquareStyle={{ backgroundColor: "#769656" }}
-            
             animationDuration={0}
+            customSquareProps={customSquareProps}
           />
         </div>
 
-        {/* Правая панель (контролы + история) */}
-        <div className="right-panel" style={{ height: boardWidth }}>
-  <Card>
-    <div className="card-content">
-      {/* Кнопки управления */}
-      <div className="controls-row">
-        <Button 
-          view="primary" 
-          size="s" 
-          onClick={() => onToggleSearch(true)}
-          style={{ flex: 1 }}
+        <div 
+          ref={panelContainerRef}
+          className="right-panel"
+          id="panel-container"
+          style={{ height: boardWidth }}
         >
-          Поиск дебюта
-        </Button>
-        <Button 
-          view="secondary" 
-          size="s" 
-          onClick={onFlipBoard}
-          style={{ flex: 1 }}
-        >
-          Смена ориентации
-        </Button>
-        <Button 
-          view="secondary"
-          size="s"
-          onClick={() => onHelpOpen(true)}
-          style={{ flex: 1 }}
-        >
-          Помощь
-        </Button>
-      </div>
-      <GameStatus game={game} errorMessage={errorMessage} />
+          <Card>
+            <div className="card-content">
+              <div className="controls-row">
+                <Button
+                  view="primary"
+                  size="s"
+                  tabIndex={0}
+                  className={SECTION_ITEM_CLASS_NAME}
+                  onClick={() => onToggleSearch(true)}
+                  style={{ flex: 1 }}
+                >
+                  Поиск дебюта
+                </Button>
+                <Button
+                  view="secondary"
+                  size="s"
+                  tabIndex={0}
+                  className={SECTION_ITEM_CLASS_NAME}
+                  onClick={onFlipBoard}
+                  style={{ flex: 1 }}
+                >
+                  Смена ориентации
+                </Button>
+                <Button
+                  view="secondary"
+                  size="s"
+                  tabIndex={0}
+                  className={SECTION_ITEM_CLASS_NAME}
+                  onClick={() => onHelpOpen(true)}
+                  style={{ flex: 1 }}
+                >
+                  Помощь
+                </Button>
+              </div>
 
-      <GameControls
-        mode={mode}
-        onChangeMode={onChangeMode}
-        resetGame={onReset}
-        hasPgn={!!pgn}
-        isGameLoaded={isGameLoaded}
-      />
+              <GameStatus game={game} errorMessage={errorMessage} />
 
-      {displayName && <div className="opening-name">{displayName}</div>}
+              <GameControls
+                mode={mode}
+                onChangeMode={onChangeMode}
+                resetGame={onReset}
+                hasPgn={!!pgn}
+                isGameLoaded={isGameLoaded}
+              />
 
-      <div className="move-history-wrapper">
-        {mode !== "practice" && moveHistory.length > 0 && (
-          <MoveHistory
-            moveHistory={moveHistory}
-            currentMoveIndex={currentMoveIndex}
-            goToMove={onMoveSelect}
-          />
-        )}
-      </div>
-    </div>
-  </Card>
-</div>
+              {displayName && <div className="opening-name">{displayName}</div>}
+
+              <div className="move-history-wrapper">
+                {mode !== "practice" && moveHistory.length > 0 && (
+                  <MoveHistory
+                    moveHistory={moveHistory}
+                    currentMoveIndex={currentMoveIndex}
+                    goToMove={onMoveSelect}
+                  />
+                )}
+              </div>
+            </div>
+          </Card>
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default ChessBoardComponent;
