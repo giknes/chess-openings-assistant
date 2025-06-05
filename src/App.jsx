@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback,useRef } from 'react';
 import { Chess } from 'chess.js';
 import { createAssistant, createSmartappDebugger } from '@salutejs/client';
+import { spatnavInstance } from '@salutejs/spatial';
 
 import './App.css';
 import {
@@ -41,11 +42,15 @@ function App() {
     isFlipped: false,
     isSearchOpen: false,
     isGameLoaded: false,
+    isHelpOpen: false,
     pgn: '1. e4 e5 2. Nf3 Nc6 3. Bb5 a6',
     errorMessage: ''
   });
 
   const dispatchRef = useRef();
+  useEffect(() => {
+    spatnavInstance.init(); 
+}, []);
 
   const getStateForAssistant = useCallback(() => ({
   }), []);
@@ -73,6 +78,7 @@ function App() {
     newAssistant.on('tts', (event) => {
       console.log(`assistant.on(tts)`, event);
     });
+
     setAssistant(newAssistant);
   }, [getStateForAssistant]);
 
@@ -124,6 +130,10 @@ function App() {
       setChessState(prev => ({ ...prev, isSearchOpen: isOpen }));
   }, []);
 
+  const handleToogleHelp = useCallback((isOpen) => {
+    setChessState(prev => ({ ...prev, isHelpOpen: isOpen }));
+}, []);
+
   const handleNextMove = useCallback(() => {
     goToMove(chessState.currentMoveIndex + 1, setChessState, speak);
   }, [chessState.currentMoveIndex, speak]);
@@ -148,13 +158,14 @@ function App() {
       make_move: () => handlePieceDrop(action.from, action.to, action.promotion),
       short_castle: () => handleCastle("short"),
       long_castle: () => handleCastle("long"),
+      open_help: () => handleToogleHelp(true)
     };
 
     if (actionHandlers[action.type]) {
       actionHandlers[action.type]();
     }
   }, [handleChangeMode, handleFlipBoard, handleNextMove, handleToggleSearch,
-    handleOpeningSelection, handlePieceDrop, handlePrevMove, handleResetGame, handleCastle
+    handlePieceDrop, handlePrevMove, handleResetGame, handleCastle, handleToogleHelp
   ]);
 
   useEffect(() => {
@@ -169,6 +180,7 @@ function App() {
       onChangeMode={handleChangeMode}
       onFlipBoard={handleFlipBoard}
       onToggleSearch={handleToggleSearch}
+      onHelpOpen={handleToogleHelp}
       onSelectOpening={handleOpeningSelection}
       onSelectVariation={handleVariationSelection}
       onReset={handleResetGame}
