@@ -10,6 +10,8 @@ import {
 } from '@salutejs/plasma-ui';
 import './OpeningSearchModal.css';
 
+import { SECTION_ROOT_CLASS_NAME, SECTION_ITEM_CLASS_NAME } from '@salutejs/spatial';
+
 export default function OpeningSearchModal({
   isOpen,
   onClose,
@@ -107,6 +109,7 @@ export default function OpeningSearchModal({
           {selectedOpening.name}: выберите вариант
         </Headline4>
 
+        
         <TextField
           value={variationSearch}
           onChange={(e) => setVariationSearch(e.target.value)}
@@ -123,7 +126,8 @@ export default function OpeningSearchModal({
                 {filteredVariations.map(variation => (
                   <Cell
                     key={variation.id}
-                    className="variation-cell"
+                    className={`${SECTION_ITEM_CLASS_NAME} variation-cell`}
+                    tabIndex={0} 
                     content={<Body1>{variation.name}</Body1>}
                     onClick={async () => {
                       const loaded = await loadVariationById(selectedOpening.id, variation.id);
@@ -137,7 +141,7 @@ export default function OpeningSearchModal({
                   />
                 ))}
                 <Cell
-                  className="variation-cell main-variation-cell"
+                  className={`${SECTION_ITEM_CLASS_NAME} variation-cell main-variation-cell`}
                   content={<Body1>Основной вариант</Body1>}
                   onClick={() => {
                     onSelectOpening(selectedOpening);
@@ -165,20 +169,22 @@ export default function OpeningSearchModal({
   );
 
   return (
-    <div className="search-modal">
+    <div className={`search-modal ${SECTION_ROOT_CLASS_NAME}`} id="searchModal">
       <Card className="search-modal-content">
         <Headline4 style={{ marginBottom: '16px' }}>Поиск дебюта</Headline4>
 
         <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
-          <TextField
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Введите название дебюта"
-            style={{ flexGrow: 1 }}
-            ref={inputRef}
-          />
+        <TextField
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Введите название дебюта"
+          inputRef={inputRef}
+          onKeyDown={handleKeyDown}
+          style={{ flexGrow: 1 }}
+        />
           <Button
+            tabIndex={0} 
+            className={SECTION_ITEM_CLASS_NAME}
             view="primary"
             onClick={handleSearch}
             disabled={!searchTerm.trim()}
@@ -196,7 +202,9 @@ export default function OpeningSearchModal({
             {filteredOpenings.length > 0 ? (
               filteredOpenings.map(opening => (
                 <Cell
+                tabIndex={0} 
                   key={opening.id}
+                  className={SECTION_ITEM_CLASS_NAME}
                   content={<Body1>{opening.name}</Body1>}
                   onClick={() => fetchVariations(opening)}
                   style={{
@@ -228,7 +236,9 @@ export default function OpeningSearchModal({
           display: 'flex',
           justifyContent: 'flex-end'
         }}>
-          <Button view="secondary" onClick={onClose}>
+          <Button
+           view="secondary"  tabIndex={0}  onClick={onClose}
+            className={SECTION_ITEM_CLASS_NAME}>
             Закрыть
           </Button>
         </div>

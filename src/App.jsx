@@ -47,10 +47,11 @@ function App() {
     errorMessage: ''
   });
 
-  const dispatchRef = useRef();
   useEffect(() => {
-    spatnavInstance.init(); 
-}, []);
+    spatnavInstance.init();
+  }, []);
+
+  const dispatchRef = useRef();
 
   const getStateForAssistant = useCallback(() => ({
   }), []);
