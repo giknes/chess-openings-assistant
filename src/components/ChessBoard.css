@@ -86,10 +86,6 @@
   z-index: 10 !important;
 }
 
-.square {
-  transition: box-shadow 0.2s ease;
-  outline: none !important;
-}
 
 
 /* Controls */

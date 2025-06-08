@@ -45,6 +45,9 @@ const ChessBoardComponent = ({
   // Создаем DOM-элементы для секций
   const panelContainerRef = useRef(null);
   const boardContainerRef = useRef(null);
+  const searchContainerRef = useRef(null);
+  const helpContainerRef = useRef(null);
+
   const searchButtonRef = useRef(null);
 
 
@@ -182,8 +185,17 @@ const ChessBoardComponent = ({
       }
   
       // === С ПАНЕЛИ ===
-      if (activeSection === 'panel') {
-        const panelEl = panelContainerRef.current;
+      if (activeSection === 'panel'  || activeSection === 'searchModal' || activeSection === 'helpModal') {
+        let panelEl = null;
+        if (activeSection === 'panel') {
+          panelEl = panelContainerRef.current;
+        }
+        if (activeSection === 'searchModal') {
+          panelEl = searchContainerRef.current;
+        }
+        if (activeSection === 'helpModal') {
+          panelEl = helpContainerRef.current;
+        }
         if (!panelEl) return null;
 
         if (direction === 'down') {
@@ -198,10 +210,8 @@ const ChessBoardComponent = ({
             return 'handled';
           }
         }
-      
         return;
       }
-      
   
       // === С ДОСКИ ===
       if (activeSection === 'chessboard') {
@@ -340,11 +350,13 @@ const ChessBoardComponent = ({
         onClose={() => onToggleSearch(false)}
         onSelectOpening={onSelectOpening}
         onSelectVariation={onSelectVariation}
+        searchContainerRef={searchContainerRef}
       />
 
       <HelpModal
         isOpen={isHelpOpen}
         onClose={() => onHelpOpen(false)}
+        helpContainerRef={helpContainerRef}
       />
 
       <div className="main-grid">

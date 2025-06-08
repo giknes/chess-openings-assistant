@@ -8,9 +8,10 @@ function MoveHistory({ moveHistory = [], currentMoveIndex = -1, goToMove = () =>
   const buttonPrevRef = useRef(null);
 
   useEffect(() => {
-    if (currentMoveIndex < 0 && buttonNextRef.current) {
+    if (currentMoveIndex < 0 && buttonNextRef.current && document.activeElement === document.body) {
       buttonNextRef.current.focus();
-    } else if (currentMoveIndex >= moveHistory.length - 1 && buttonPrevRef.current) {
+    } else if (currentMoveIndex >= moveHistory.length - 1 && buttonPrevRef.current && document.activeElement === document.body) {
+      console.log('Focus on previous button');
       buttonPrevRef.current.focus();
     }
   }, [currentMoveIndex, moveHistory.length]);
