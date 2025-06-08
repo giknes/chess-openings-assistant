@@ -13,6 +13,7 @@ export default function GameControls({
       {/* Строка с кнопками режимов */}
       <div className="mode-buttons-row">
         <Button
+          data-edge="left"
           view={mode === "learn" ? "primary" : "secondary"}
           size="s"
           onClick={() => onChangeMode("learn")}
@@ -29,7 +30,7 @@ export default function GameControls({
           disabled={!isGameLoaded && mode !== "free"}
           className="mode-button"
         >
-          Проверка
+          Практика
         </Button>
         
         <Button
@@ -44,6 +45,7 @@ export default function GameControls({
 
       {/* Кнопка сброса */}
       <Button
+        data-edge="left"
         view="warning"
         size="s"
         onClick={resetGame}

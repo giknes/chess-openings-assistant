@@ -2,6 +2,8 @@ import React from 'react';
 import { Card, Button, TextBox } from '@salutejs/plasma-ui';
 import styled from 'styled-components';
 
+import {SECTION_ROOT_CLASS_NAME, SECTION_ITEM_CLASS_NAME } from '@salutejs/spatial';
+
 const Overlay = styled.div`
   position: fixed;
   top: 0;
@@ -78,7 +80,10 @@ export default function HelpModal({ isOpen, onClose }) {
 
   return (
     <Overlay onClick={onClose}>
-      <ModalContent onClick={(e) => e.stopPropagation()}>
+      <ModalContent
+        onClick={(e) => e.stopPropagation()}
+        className={`${SECTION_ROOT_CLASS_NAME} ${SECTION_ITEM_CLASS_NAME}`}
+        id="helpModal">
         <ModalTitle>Шахматный помощник — Руководство</ModalTitle>
 
         <TextBox size="l" title="О дебютах и режимах">
@@ -96,8 +101,8 @@ export default function HelpModal({ isOpen, onClose }) {
           <CommandTitle>Основные команды:</CommandTitle>
           <CommandList>
             <CommandItem><strong>"помощь" | "помоги"</strong> — открывает это окно с инструкциями</CommandItem>
-            <CommandItem><strong>"сброс" | "новая игра" | "начни заново" | "рестарт"</strong> — сбрасывает игру в начальное положение</CommandItem>
-            <CommandItem><strong>"переверни доску" | "разверни доску" | "поверни доску"</strong> — меняет ориентацию шахматной доски</CommandItem>
+            <CommandItem><strong>"сброс" | "новая игра" | "начни заново" | "рестарт" | "перезагрузить"</strong> — сбрасывает игру в начальное положение</CommandItem>
+            <CommandItem><strong>"переверни доску" | "разверни доску" | "поверни доску" | "cмени цвет" | "поменяй цвет" | "смена цвета"</strong> — меняет ориентацию шахматной доски</CommandItem>
           </CommandList>
         </CommandGroup>
 
