@@ -105,6 +105,15 @@ export default function OpeningSearchModal({
 
     return (
       <div className="variations-list">
+        <Button
+          view="secondary"
+          className={SECTION_ITEM_CLASS_NAME}
+          tabIndex={selectedOpening ? 0 : -1}
+          onClick={() => setSelectedOpening(null)}
+          style={{ alignSelf: 'flex-start' }}
+        >
+          ← Назад
+        </Button>
         <Headline4 style={{ marginBottom: '12px' }}>
           {selectedOpening.name}: выберите вариант
         </Headline4>
@@ -127,7 +136,7 @@ export default function OpeningSearchModal({
                   <Cell
                     key={variation.id}
                     className={`${SECTION_ITEM_CLASS_NAME} variation-cell`}
-                    tabIndex={0} 
+                    tabIndex={selectedOpening ? 0 : -1}
                     content={<Body1>{variation.name}</Body1>}
                     onClick={async () => {
                       const loaded = await loadVariationById(selectedOpening.id, variation.id);
@@ -193,40 +202,42 @@ export default function OpeningSearchModal({
           </Button>
         </div>
 
-        {isLoading ? (
-          <div style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
-            <Spinner />
-          </div>
-        ) : (
-          <div className="openings-list">
-            {filteredOpenings.length > 0 ? (
-              filteredOpenings.map(opening => (
-                <Cell
-                tabIndex={0} 
-                  key={opening.id}
-                  className={SECTION_ITEM_CLASS_NAME}
-                  content={<Body1>{opening.name}</Body1>}
-                  onClick={() => fetchVariations(opening)}
-                  style={{
-                    cursor: 'pointer',
-                    borderRadius: '8px',
-                    transition: 'background 0.2s ease'
-                  }}
-                  hoverable
-                />
-              ))
-            ) : (
-              <Body1 style={{
-                textAlign: 'center',
-                color: 'var(--plasma-colors-text-secondary)',
-                padding: '12px'
-              }}>
-                {searchTerm && !isLoading
-                  ? 'Ничего не найдено. Попробуйте другой запрос'
-                  : 'Загрузка дебютов...'}
-              </Body1>
-            )}
-          </div>
+        {!selectedOpening && (
+          isLoading ? (
+            <div style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
+              <Spinner />
+            </div>
+          ) : (
+            <div className="openings-list">
+              {filteredOpenings.length > 0 ? (
+                filteredOpenings.map(opening => (
+                  <Cell
+                    tabIndex={0}
+                    key={opening.id}
+                    className={SECTION_ITEM_CLASS_NAME}
+                    content={<Body1>{opening.name}</Body1>}
+                    onClick={() => fetchVariations(opening)}
+                    style={{
+                      cursor: 'pointer',
+                      borderRadius: '8px',
+                      transition: 'background 0.2s ease'
+                    }}
+                    hoverable
+                  />
+                ))
+              ) : (
+                <Body1 style={{
+                  textAlign: 'center',
+                  color: 'var(--plasma-colors-text-secondary)',
+                  padding: '12px'
+                }}>
+                  {searchTerm && !isLoading
+                    ? 'Ничего не найдено. Попробуйте другой запрос'
+                    : 'Загрузка дебютов...'}
+                </Body1>
+              )}
+            </div>
+          )
         )}
 
         {renderVariations()}
@@ -237,7 +248,7 @@ export default function OpeningSearchModal({
           justifyContent: 'flex-end'
         }}>
           <Button
-           view="secondary"  tabIndex={0}  onClick={onClose}
+            view="secondary"  tabIndex={0}  onClick={onClose}
             className={SECTION_ITEM_CLASS_NAME}>
             Закрыть
           </Button>
