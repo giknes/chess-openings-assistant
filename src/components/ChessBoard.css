@@ -37,7 +37,15 @@
 
 
 :focus-visible {
-  border-radius: 12px;
+  border-radius: 1px;
+
+}
+
+.chessboard-area [data-square]:focus-visible {
+  border-radius: 1px;
+  outline: 3px solid #000000 !important;
+  outline-offset: -2px;
+  z-index: 100 !important;
 }
 
 .chessboard-area {
@@ -47,7 +55,9 @@
   align-items: center;
   height: 100%;
   max-height: calc(100vh - 120px);
+  overflow: visible; /* важно! */
 }
+
 
 .right-panel {
   flex: 1;
@@ -82,13 +92,14 @@
 }
 
 .focused-square {
-  box-shadow: 0 0 0 3px var(--plasma-colors-button-accent) !important;
-  z-index: 10 !important;
+  outline: 3px solid #4D7CFE !important;
+  outline-offset: -2px; /* Чтобы не выходил за границы клетки */
+  z-index: 100 !important;
 }
 
-.square {
-  transition: box-shadow 0.2s ease;
-  outline: none !important;
+.square{
+  padding: 4px;
+  overflow:visible;
 }
 
 

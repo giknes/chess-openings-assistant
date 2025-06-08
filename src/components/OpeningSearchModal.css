@@ -8,8 +8,11 @@
   background: rgba(0, 0, 0, 0.7);
   z-index: 1000;
   display: flex;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: none;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   padding: 16px;
 }
 
@@ -17,15 +20,17 @@
 .search-modal-content {
   width: 100%;
   max-width: 500px;
-  max-height: 80vh;
-  overflow-y: auto;
+  max-height: 90vh;
   padding: 1.5rem;
+  overflow: auto;
+  overflow-x: hidden;
   border-radius: 12px;
   background-color: var(--plasma-colors-surface-card);
   color: var(--plasma-colors-text-primary);
   backdrop-filter: blur(6px);
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
   transition: background-color 0.3s ease;
+
 }
 
 /* Список дебютов */
@@ -34,8 +39,8 @@
   flex-direction: column;
   gap: 4px;
   margin-top: 12px;
-  max-height: 50vh;
-  overflow-y: auto;
+  max-height: none;
+  overflow: visible;
   padding: 4px;
 }
 
@@ -45,6 +50,9 @@
   flex-direction: column;
   gap: 8px;
   margin-top: 20px;
+  max-height: none;
+  overflow: visible;
+  padding: 4px;
 }
 
 /* Элемент вариации */

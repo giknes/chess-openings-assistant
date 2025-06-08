@@ -75,12 +75,13 @@ const CommandItem = styled.li`
   }
 `;
 
-export default function HelpModal({ isOpen, onClose }) {
+export default function HelpModal({ isOpen, onClose, helpContainerRef }) {
   if (!isOpen) return null;
 
   return (
     <Overlay onClick={onClose}>
       <ModalContent
+        ref={helpContainerRef}
         onClick={(e) => e.stopPropagation()}
         className={`${SECTION_ROOT_CLASS_NAME} ${SECTION_ITEM_CLASS_NAME}`}
         id="helpModal">
