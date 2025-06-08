@@ -45,7 +45,7 @@ const goToMove = (index, setChessState, speak) => {
       try {
           const { currentMoveIndex, moveHistory, game, mode } = prevState;
 
-          if (index >= moveHistory.length) {
+          if (index >= moveHistory.length || index < -1) {
               console.warn("Недопустимый индекс хода:", index);
               return prevState; // Индекс за пределами допустимого диапазона
           }

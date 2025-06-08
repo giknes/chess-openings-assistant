@@ -7,7 +7,6 @@
   width: 100%;
   box-sizing: border-box;
   min-height: calc(100vh - 3.75rem); /* rem вместо px */
-  font-size: 1rem; /* Базовый размер шрифта */
 }
 
 *, *::before, *::after {
@@ -32,8 +31,8 @@
 }
 
 .controls-row button{
-  font-size: clamp(0.8rem, 1.5vw, 1rem) !important;
-
+  padding: 1px;
+  font-size: clamp(0.5rem, 1.5vw, 1rem) !important;
 }
 
 
@@ -107,7 +106,7 @@
   height: auto !important;
   min-height: 3rem !important; /* rem вместо px */
   padding: 0.75rem 1rem !important; /* rem вместо px */
-  font-size: clamp(0.8rem, 1.5vw, 1rem) !important;
+  font-size: clamp(0.5rem, 1.5vw, 1rem) !important;
   white-space: nowrap;
   flex: 1 1 auto; /* Гибкое распределение пространства */
   min-width: 0; /* Позволяет кнопкам сжиматься */
@@ -154,7 +153,6 @@
     min-width: unset;
   }
   .plasma-ui__button {
-    font-size: 0.85rem !important;
     padding: 0.5rem 0.75rem !important;
   }
 }
@@ -178,6 +176,10 @@
   .main-grid {
     flex-direction: column;
     align-items: center;
+  }
+
+  .controls-row button{
+    font-size: clamp(0.8rem, 1.5vw, 1rem) !important;
   }
 
   .right-panel {

@@ -1,10 +1,24 @@
-import React from 'react';
+import { useEffect, useRef } from "react";
 import { Card, Button, Cell, Row, Col } from '@salutejs/plasma-ui';
 import { SECTION_ITEM_CLASS_NAME } from '@salutejs/spatial';
 import './MoveHistory.css';
 
-function MoveHistory({ moveHistory = [], currentMoveIndex = -1, goToMove = () => {} }) {
-  if (!Array.isArray(moveHistory)) return null;
+function MoveHistory({ moveHistory = [], currentMoveIndex = -1, goToMove = () => {}, searchButtonRef = null }) {
+  const buttonNextRef = useRef(null);
+  const buttonPrevRef = useRef(null);
+
+  useEffect(() => {
+    if (currentMoveIndex < 0 && buttonNextRef.current) {
+      buttonNextRef.current.focus();
+    } else if (currentMoveIndex >= moveHistory.length - 1 && buttonPrevRef.current) {
+      buttonPrevRef.current.focus();
+    }
+  }, [currentMoveIndex, moveHistory.length]);
+
+  if (!Array.isArray(moveHistory) || moveHistory.length === 0) {
+    searchButtonRef?.current?.focus(); 
+    return null;
+  } 
 
   return (
     <Card className="history-card">
@@ -31,6 +45,7 @@ function MoveHistory({ moveHistory = [], currentMoveIndex = -1, goToMove = () =>
       <Row className="navigation-buttons">
         <Col className="nav-col">
           <Button
+            ref={buttonPrevRef}
             view="secondary"
             size="s"
             tabIndex={0}
@@ -43,6 +58,7 @@ function MoveHistory({ moveHistory = [], currentMoveIndex = -1, goToMove = () =>
         </Col>
         <Col className="nav-col">
           <Button
+            ref={buttonNextRef}
             view="secondary"
             size="s"
             tabIndex={0}

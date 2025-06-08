@@ -45,6 +45,7 @@ const ChessBoardComponent = ({
   // Создаем DOM-элементы для секций
   const panelContainerRef = useRef(null);
   const boardContainerRef = useRef(null);
+  const searchButtonRef = useRef(null);
 
 
   useEffect(() => {
@@ -382,6 +383,7 @@ const ChessBoardComponent = ({
             <div className="card-content">
               <div className="controls-row">
                 <Button
+                  ref={searchButtonRef}
                   data-edge="top left"
                   view="primary"
                   size="s"
@@ -429,11 +431,12 @@ const ChessBoardComponent = ({
               {displayName && <div className="opening-name">{displayName}</div>}
 
               <div className="move-history-wrapper">
-                {mode !== "practice" && moveHistory.length > 0 && (
+                {mode !== "practice" && moveHistory.length >= 0 && (
                   <MoveHistory
                     moveHistory={moveHistory}
                     currentMoveIndex={currentMoveIndex}
                     goToMove={onMoveSelect}
+                    searchButtonRef={searchButtonRef}
                   />
                 )}
               </div>

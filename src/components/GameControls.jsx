@@ -30,7 +30,7 @@ export default function GameControls({
           disabled={!isGameLoaded && mode !== "free"}
           className="mode-button"
         >
-          Проверка
+          Практика
         </Button>
         
         <Button
