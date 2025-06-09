@@ -11,5 +11,7 @@
   background: #e3f2fd;
   color: #1976d2;
   border-left: 4px solid #1976d2;
+  font-size: clamp(0.8rem, 1.5vw, 1.5rem) !important;
   overflow: hidden;
+  
 }

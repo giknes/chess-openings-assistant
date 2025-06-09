@@ -14,7 +14,7 @@
   justify-content: center;
   gap: 8px;
   transition: all 0.2s;
-  font-size: clamp(0.5rem, 1.5vw, 1rem) !important;
+  font-size: clamp(0.5rem, 1.5vw, 1.5rem) !important;
 }
 
 .search-button:hover {
@@ -30,7 +30,7 @@
 .mode-button {
   flex: 1;
   padding: 1px;
-  font-size: clamp(0.5rem, 1.5vw, 1rem) !important;
+  font-size: clamp(0.5rem, 1.5vw, 1.5rem) !important;
 }
 
 /* Адаптация для мобильных */
@@ -70,7 +70,7 @@
 
 .reset-button {
   width: 100%;
-  font-size: clamp(0.5rem, 1.5vw, 1rem) !important;
+  font-size: clamp(0.5rem, 1.5vw, 1.5rem) !important;
 }
 
 .game-controls-container {
