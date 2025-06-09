@@ -6,7 +6,8 @@ export default function GameControls({
   onChangeMode,
   resetGame,
   hasPgn,
-  isGameLoaded
+  isGameLoaded,
+  freeButtonRef
 }) {
   return (
     <div className="game-controls-container">
@@ -34,6 +35,7 @@ export default function GameControls({
         </Button>
         
         <Button
+          ref={freeButtonRef}
           view={mode === "free" ? "primary" : "secondary"}
           size="s"
           onClick={() => onChangeMode("free")}

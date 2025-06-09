@@ -3,7 +3,7 @@ import { Card, Button, Cell, Row, Col } from '@salutejs/plasma-ui';
 import { SECTION_ITEM_CLASS_NAME } from '@salutejs/spatial';
 import './MoveHistory.css';
 
-function MoveHistory({ moveHistory = [], currentMoveIndex = -1, goToMove = () => {}, searchButtonRef = null }) {
+function MoveHistory({ moveHistory = [], currentMoveIndex = -1, goToMove = () => {},freeButtonRef = null }) {
   const buttonNextRef = useRef(null);
   const buttonPrevRef = useRef(null);
 
@@ -11,13 +11,13 @@ function MoveHistory({ moveHistory = [], currentMoveIndex = -1, goToMove = () =>
     if (currentMoveIndex < 0 && buttonNextRef.current && document.activeElement === document.body) {
       buttonNextRef.current.focus();
     } else if (currentMoveIndex >= moveHistory.length - 1 && buttonPrevRef.current && document.activeElement === document.body) {
-      console.log('Focus on previous button');
       buttonPrevRef.current.focus();
+    }else if (moveHistory.length === 0){
+      freeButtonRef.current?.focus();
     }
   }, [currentMoveIndex, moveHistory.length]);
 
   if (!Array.isArray(moveHistory) || moveHistory.length === 0) {
-    searchButtonRef?.current?.focus(); 
     return null;
   } 
 

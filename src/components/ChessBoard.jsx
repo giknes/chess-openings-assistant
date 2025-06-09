@@ -48,7 +48,7 @@ const ChessBoardComponent = ({
   const searchContainerRef = useRef(null);
   const helpContainerRef = useRef(null);
 
-  const searchButtonRef = useRef(null);
+  const freeButtonRef = useRef(null);
 
 
   useEffect(() => {
@@ -395,7 +395,6 @@ const ChessBoardComponent = ({
             <div className="card-content">
               <div className="controls-row">
                 <Button
-                  ref={searchButtonRef}
                   data-edge="top left"
                   view="primary"
                   size="s"
@@ -438,6 +437,7 @@ const ChessBoardComponent = ({
                 resetGame={onReset}
                 hasPgn={!!pgn}
                 isGameLoaded={isGameLoaded}
+                freeButtonRef={freeButtonRef}
               />
 
               {displayName && <div className="opening-name">{displayName}</div>}
@@ -448,7 +448,7 @@ const ChessBoardComponent = ({
                     moveHistory={moveHistory}
                     currentMoveIndex={currentMoveIndex}
                     goToMove={onMoveSelect}
-                    searchButtonRef={searchButtonRef}
+                    freeButtonRef={freeButtonRef}
                   />
                 )}
               </div>
