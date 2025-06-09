@@ -201,12 +201,12 @@ const ChessBoardComponent = ({
         if (direction === 'down') {
           const bottomReached = panelEl.scrollHeight - panelEl.scrollTop === panelEl.clientHeight;
           if (!bottomReached) {
-            panelEl.scrollBy({ top: 40, behavior: 'smooth' });
+            panelEl.scrollBy({ top: 80, behavior: 'smooth' });
             return 'handled';
           }
         } else if (direction === 'up') {
           if (panelEl.scrollTop > 0) {
-            panelEl.scrollBy({ top: -40, behavior: 'smooth' });
+            panelEl.scrollBy({ top: -80, behavior: 'smooth' });
             return 'handled';
           }
         }
