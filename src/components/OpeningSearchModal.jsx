@@ -9,8 +9,18 @@ import {
   Headline4
 } from '@salutejs/plasma-ui';
 import './OpeningSearchModal.css';
+import styled from 'styled-components';
 
 import { SECTION_ROOT_CLASS_NAME, SECTION_ITEM_CLASS_NAME } from '@salutejs/spatial';
+
+const CloseButton = styled(Button)`
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 1100; 
+  min-width: auto;
+  padding: 0.25rem 0.75rem;
+`;
 
 export default function OpeningSearchModal({
   isOpen,
@@ -194,6 +204,9 @@ export default function OpeningSearchModal({
 
   return (
     <div className={`search-modal ${SECTION_ROOT_CLASS_NAME}`} id="searchModal">
+      <CloseButton view="secondary" onClick={onClose} className={SECTION_ITEM_CLASS_NAME} >
+        Закрыть
+      </CloseButton>
       <Card ref={searchContainerRef} className="search-modal-content">
         <Headline4 style={{ marginBottom: '16px' }}>Поиск дебюта</Headline4>
 
@@ -265,11 +278,7 @@ export default function OpeningSearchModal({
           display: 'flex',
           justifyContent: 'flex-end'
         }}>
-          <Button
-            view="secondary"  tabIndex={0}  onClick={onClose}
-            className={SECTION_ITEM_CLASS_NAME}>
-            Закрыть
-          </Button>
+
         </div>
       </Card>
     </div>

@@ -13,6 +13,7 @@ const Overlay = styled.div`
   background-color: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(6px);
   display: flex;
+  padding-right: 5rem;
   justify-content: center;
   align-items: center;
   z-index: 1000;
@@ -24,6 +25,12 @@ const ModalContent = styled(Card)`
   max-height: 80vh;
   padding: 2rem;
   overflow-y: auto;
+  font-size: clamp(1rem, 1.2vw, 1.6rem);
+  line-height: 1.6;
+
+  @media (min-width: 2400px){
+    max-width: 1500px;
+  }
 `;
 
 const ModalTitle = styled.h2`
@@ -92,7 +99,7 @@ export default function HelpModal({ isOpen, onClose, helpContainerRef }) {
       <ModalContent
         ref={helpContainerRef}
         onClick={(e) => e.stopPropagation()}
-        className={`${SECTION_ROOT_CLASS_NAME} ${SECTION_ITEM_CLASS_NAME}`}
+        className={`${SECTION_ROOT_CLASS_NAME}`}
         id="helpModal">
         
          {/* Кнопка "Закрыть" */}
@@ -149,14 +156,6 @@ export default function HelpModal({ isOpen, onClose, helpContainerRef }) {
             <CommandItem><strong>"длинная рокировка" | "рокируй влево" | "O-O-O"</strong> — делает длинную рокировку</CommandItem>
           </CommandList>
         </CommandGroup>
-
-        <HelpButton 
-          view="primary" 
-          onClick={onClose}
-          className={SECTION_ITEM_CLASS_NAME}
-        >
-          Понятно
-        </HelpButton>
       </ModalContent>
     </Overlay>
   );

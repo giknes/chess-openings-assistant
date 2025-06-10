@@ -30,7 +30,21 @@
   backdrop-filter: blur(6px);
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
   transition: background-color 0.3s ease;
+}
 
+@media (min-width: 2400px) {
+  .search-modal-content {
+    max-width: 1500px;
+  }
+}
+
+@media (max-width: 600px) {
+  .search-modal-content {
+    width: 80%;
+  }
+  .search-modal{
+    padding-right: 5rem;
+  }
 }
 
 /* Список дебютов */
