@@ -75,6 +75,15 @@ const CommandItem = styled.li`
   }
 `;
 
+const CloseButton = styled(Button)`
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 1100; 
+  min-width: auto;
+  padding: 0.25rem 0.75rem;
+`;
+
 export default function HelpModal({ isOpen, onClose, helpContainerRef }) {
   if (!isOpen) return null;
 
@@ -85,6 +94,12 @@ export default function HelpModal({ isOpen, onClose, helpContainerRef }) {
         onClick={(e) => e.stopPropagation()}
         className={`${SECTION_ROOT_CLASS_NAME} ${SECTION_ITEM_CLASS_NAME}`}
         id="helpModal">
+        
+         {/* Кнопка "Закрыть" */}
+         <CloseButton view="secondary" onClick={onClose} className={SECTION_ITEM_CLASS_NAME} >
+          Закрыть
+        </CloseButton>
+
         <ModalTitle>Шахматный помощник — Руководство</ModalTitle>
 
         <TextBox size="l" title="О дебютах и режимах">
@@ -119,7 +134,7 @@ export default function HelpModal({ isOpen, onClose, helpContainerRef }) {
           <CommandTitle>Режимы игры:</CommandTitle>
           <CommandList>
             <CommandItem><strong>"режим обучение" | "поставь обучение"</strong> — включает режим изучения дебютов</CommandItem>
-            <CommandItem><strong>"режим практика" | "поставь проверка"</strong> — включает режим проверки знаний</CommandItem>
+            <CommandItem><strong>"режим практика" | "поставь практику"</strong> — включает режим проверки знаний</CommandItem>
             <CommandItem><strong>"режим свободная" | "выбери свободная"</strong> — включает свободную игру</CommandItem>
           </CommandList>
         </CommandGroup>
@@ -129,7 +144,7 @@ export default function HelpModal({ isOpen, onClose, helpContainerRef }) {
           <CommandList>
             <CommandItem><strong>"следующий ход"</strong> — в режиме обучения переходит к следующему ходу</CommandItem>
             <CommandItem><strong>"предыдущий ход"</strong> — в режиме обучения возвращает предыдущий ход</CommandItem>
-            <CommandItem><strong>"ход g1-f3" | "походи e2-e4" | "сделай ход a7-a5"</strong> — делает указанный ход</CommandItem>
+            <CommandItem><strong>"g1 f3" | "ход g1-f3" | "походи e2-e4"| "сходи e2-e4" | "сделай ход a7-a5"</strong> — делает указанный ход</CommandItem>
             <CommandItem><strong>"короткая рокировка" | "рокируй вправо" | "O-O"</strong> — делает короткую рокировку</CommandItem>
             <CommandItem><strong>"длинная рокировка" | "рокируй влево" | "O-O-O"</strong> — делает длинную рокировку</CommandItem>
           </CommandList>
@@ -138,7 +153,7 @@ export default function HelpModal({ isOpen, onClose, helpContainerRef }) {
         <HelpButton 
           view="primary" 
           onClick={onClose}
-          focused={isOpen}
+          className={SECTION_ITEM_CLASS_NAME}
         >
           Понятно
         </HelpButton>

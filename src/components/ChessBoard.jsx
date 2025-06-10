@@ -201,12 +201,12 @@ const ChessBoardComponent = ({
         if (direction === 'down') {
           const bottomReached = panelEl.scrollHeight - panelEl.scrollTop === panelEl.clientHeight;
           if (!bottomReached) {
-            panelEl.scrollBy({ top: 80, behavior: 'smooth' });
+            panelEl.scrollBy({ top: 120, behavior: 'smooth' });
             return 'handled';
           }
         } else if (direction === 'up') {
           if (panelEl.scrollTop > 0) {
-            panelEl.scrollBy({ top: -80, behavior: 'smooth' });
+            panelEl.scrollBy({ top: -120, behavior: 'smooth' });
             return 'handled';
           }
         }
@@ -226,19 +226,31 @@ const ChessBoardComponent = ({
         let newFile = file.charCodeAt(0); // 'a' to 'h'
         let newRank = parseInt(rank);     // 1 to 8
   
-        // Уход с доски на панель: вправо (в landscape) или вниз (в portrait)
-        const shouldMoveToPanel =
-          (!isPortrait && direction === 'right' && file === 'h') ||
-          (isPortrait && direction === 'down' && rank === '1');
-  
-          if (shouldMoveToPanel) {
-            setActiveSection('panel');
-            setFocusedSquare(null);
-        
-            return;
+        let effectiveDirection = direction;
+        if (chessState.isFlipped) {
+          switch (direction) {
+            case 'up': effectiveDirection = 'down'; break;
+            case 'down': effectiveDirection = 'up'; break;
+            case 'left': effectiveDirection = 'right'; break;
+            case 'right': effectiveDirection = 'left'; break;
           }
-  
-        switch (direction) {
+        }
+
+        // Условие выхода с доски на панель
+        const shouldMoveToPanel =
+          (!isPortrait && effectiveDirection === 'right' && file === 'h' && !isFlipped) ||
+          (!isPortrait && effectiveDirection === 'left' && file === 'a' && isFlipped) ||
+          (isPortrait && effectiveDirection === 'down' && rank === '1' && !isFlipped) ||
+          (isPortrait && effectiveDirection === 'up' && rank === '8' && isFlipped);
+
+        if (shouldMoveToPanel) {
+          setActiveSection('panel');
+          setFocusedSquare(null);
+          return;
+        }
+
+        // Навигация по доске
+        switch (effectiveDirection) {
           case 'up':
             if (newRank < 8) newRank++;
             break;
